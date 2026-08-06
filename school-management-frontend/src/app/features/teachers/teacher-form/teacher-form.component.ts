@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeacherService } from '../../../core/services/teacher.service';
 import { SchoolService } from '../../../core/services/school.service';
 import { SchoolResponse } from '../../../core/models/school.model';
+import { SessionService } from '../../../core/services/session.service';
 import { extractErrorMessage } from '../../../core/utils/api-error';
 
 @Component({
@@ -33,7 +34,11 @@ export class TeacherFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly teacherService = inject(TeacherService);
   private readonly schoolService = inject(SchoolService);
+  private readonly sessionService = inject(SessionService);
   private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly isPrincipalScoped = this.sessionService.session()?.role === 'principal';
+  private readonly homeRoute = this.isPrincipalScoped ? '/principal/teachers' : '/teachers';
 
   protected readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -54,6 +59,16 @@ export class TeacherFormComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
+
+    if (this.isPrincipalScoped) {
+      this.form.patchValue({ schoolId: this.sessionService.session()!.entityId });
+      if (idParam) {
+        this.loadTeacher(Number(idParam));
+      } else {
+        this.loading.set(false);
+      }
+      return;
+    }
 
     // TeacherResponse only exposes schoolName, not schoolId, so the schools list must be
     // loaded before an existing teacher's school selection can be resolved and pre-filled.
@@ -80,18 +95,16 @@ export class TeacherFormComponent implements OnInit {
 
     this.teacherService.getTeacher(id).subscribe({
       next: (teacher) => {
-        const school = this.schools().find((s) => s.schoolName === teacher.schoolName);
-        this.form.patchValue({
-          name: teacher.name,
-          email: teacher.email,
-          schoolId: school?.id ?? null
-        });
+        const schoolId = this.isPrincipalScoped
+          ? this.sessionService.session()!.entityId
+          : (this.schools().find((s) => s.schoolName === teacher.schoolName)?.id ?? null);
+        this.form.patchValue({ name: teacher.name, email: teacher.email, schoolId });
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
         this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
-        this.router.navigate(['/teachers']);
+        this.router.navigate([this.homeRoute]);
       }
     });
   }
@@ -118,7 +131,7 @@ export class TeacherFormComponent implements OnInit {
           'Close',
           { duration: 3000 }
         );
-        this.router.navigate(['/teachers']);
+        this.router.navigate([this.homeRoute]);
       },
       error: (err: HttpErrorResponse) => {
         this.saving.set(false);
@@ -128,6 +141,6 @@ export class TeacherFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/teachers']);
+    this.router.navigate([this.homeRoute]);
   }
 }

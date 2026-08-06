@@ -1,0 +1,60 @@
+<div class="picker-page">
+  <div class="picker-card">
+    <h1>School Management</h1>
+
+    @if (role() === null) {
+      <p class="subtitle">Continue as...</p>
+      <div class="role-buttons">
+        <button mat-flat-button color="primary" (click)="chooseRole('principal')">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Principal
+        </button>
+        <button mat-flat-button color="primary" (click)="chooseRole('teacher')">
+          <mat-icon>person</mat-icon>
+          Teacher
+        </button>
+        <button mat-flat-button color="primary" (click)="chooseRole('student')">
+          <mat-icon>groups</mat-icon>
+          Student
+        </button>
+      </div>
+    } @else {
+      <p class="subtitle">
+        {{
+          role() === 'principal'
+            ? 'Which school are you the principal of?'
+            : role() === 'teacher'
+              ? 'Which teacher are you?'
+              : 'Which student are you?'
+        }}
+      </p>
+
+      @if (loading()) {
+        <div class="loading-row">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline" class="entity-field">
+          <mat-label>Select</mat-label>
+          <mat-select [formControl]="selectedEntityId">
+            @for (entity of entities(); track entity.id) {
+              <mat-option [value]="entity.id">{{ entity.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="picker-actions">
+          <button mat-button (click)="back()">Back</button>
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="selectedEntityId.value === null"
+            (click)="continue()"
+          >
+            Continue
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>

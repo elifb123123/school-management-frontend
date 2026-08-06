@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { SchoolService } from '../../../core/services/school.service';
+import { SessionService } from '../../../core/services/session.service';
 import { extractErrorMessage } from '../../../core/utils/api-error';
 
 @Component({
@@ -28,7 +29,11 @@ export class SchoolFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly schoolService = inject(SchoolService);
+  private readonly sessionService = inject(SessionService);
   private readonly snackBar = inject(MatSnackBar);
+
+  private readonly isPrincipalScoped = this.sessionService.session()?.role === 'principal';
+  private readonly homeRoute = this.isPrincipalScoped ? '/principal/school' : '/schools';
 
   protected readonly form = new FormGroup({
     schoolName: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -43,8 +48,14 @@ export class SchoolFormComponent implements OnInit {
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.schoolId = Number(idParam);
+    const id = idParam
+      ? Number(idParam)
+      : this.isPrincipalScoped
+        ? this.sessionService.session()!.entityId
+        : null;
+
+    if (id !== null) {
+      this.schoolId = id;
       this.isEditMode.set(true);
       this.loading.set(true);
       this.schoolService.getSchool(this.schoolId).subscribe({
@@ -55,7 +66,7 @@ export class SchoolFormComponent implements OnInit {
         error: (err: HttpErrorResponse) => {
           this.loading.set(false);
           this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
-          this.router.navigate(['/schools']);
+          this.router.navigate([this.homeRoute]);
         }
       });
     }
@@ -82,7 +93,7 @@ export class SchoolFormComponent implements OnInit {
           'Close',
           { duration: 3000 }
         );
-        this.router.navigate(['/schools']);
+        this.router.navigate([this.homeRoute]);
       },
       error: (err: HttpErrorResponse) => {
         this.saving.set(false);
@@ -92,6 +103,6 @@ export class SchoolFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/schools']);
+    this.router.navigate([this.homeRoute]);
   }
 }

@@ -1,0 +1,48 @@
+@if (profile(); as p) {
+  <div class="profile-card">
+    <h1>{{ p.name }}</h1>
+    <p class="profile-line">{{ p.email }}</p>
+    <p class="profile-line">{{ p.schoolName }}</p>
+  </div>
+}
+
+<h2>My teachers</h2>
+
+<div class="add-row">
+  <mat-form-field appearance="outline" class="add-field">
+    <mat-label>Add a teacher from my school</mat-label>
+    <mat-select [formControl]="selectedTeacherId">
+      @for (teacher of availableTeachers(); track teacher.id) {
+        <mat-option [value]="teacher.id">{{ teacher.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="selectedTeacherId.value === null || linking()"
+    (click)="linkSelectedTeacher()"
+  >
+    {{ linking() ? 'Linking...' : 'Link' }}
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="loading-row">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (linkedTeachers().length === 0) {
+  <p class="empty-state">No teachers linked yet.</p>
+} @else {
+  <mat-list>
+    @for (teacher of linkedTeachers(); track teacher.id) {
+      <mat-list-item>
+        <span matListItemTitle>{{ teacher.name }}</span>
+        <span matListItemLine>{{ teacher.email }}</span>
+        <button mat-icon-button matListItemMeta (click)="unlinkTeacher(teacher)" aria-label="Unlink">
+          <mat-icon>link_off</mat-icon>
+        </button>
+      </mat-list-item>
+    }
+  </mat-list>
+}

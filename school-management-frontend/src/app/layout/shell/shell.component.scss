@@ -10,6 +10,21 @@
   padding: 24px;
 }
 
+.shell-content--full {
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
 .active-link {
   background: var(--mat-sys-secondary-container);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.session-label {
+  margin-right: 16px;
+  text-transform: capitalize;
+  opacity: 0.9;
 }

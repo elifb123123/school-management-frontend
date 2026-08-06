@@ -5,11 +5,18 @@ import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api-config';
 import { Page } from '../models/page.model';
 import { SchoolRequest, SchoolResponse } from '../models/school.model';
+import { TeacherResponse } from '../models/teacher.model';
+import { StudentResponse } from '../models/student.model';
 
 export interface SchoolListParams {
   page: number;
   size: number;
   name?: string;
+}
+
+export interface SchoolSubResourceParams {
+  page: number;
+  size: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -39,5 +46,25 @@ export class SchoolService {
 
   deleteSchool(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getTeachersBySchool(
+    schoolId: number,
+    params: SchoolSubResourceParams
+  ): Observable<Page<TeacherResponse>> {
+    const httpParams = new HttpParams().set('page', params.page).set('size', params.size);
+    return this.http.get<Page<TeacherResponse>>(`${this.baseUrl}/${schoolId}/teachers`, {
+      params: httpParams
+    });
+  }
+
+  getStudentsBySchool(
+    schoolId: number,
+    params: SchoolSubResourceParams
+  ): Observable<Page<StudentResponse>> {
+    const httpParams = new HttpParams().set('page', params.page).set('size', params.size);
+    return this.http.get<Page<StudentResponse>>(`${this.baseUrl}/${schoolId}/students`, {
+      params: httpParams
+    });
   }
 }

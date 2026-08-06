@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api-config';
 import { Page } from '../models/page.model';
 import { StudentRequest, StudentResponse } from '../models/student.model';
+import { TeacherResponse } from '../models/teacher.model';
 
 export interface StudentListParams {
   page: number;
@@ -47,5 +48,17 @@ export class StudentService {
 
   deleteStudent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getTeachersOfStudent(studentId: number): Observable<TeacherResponse[]> {
+    return this.http.get<TeacherResponse[]>(`${this.baseUrl}/${studentId}/teachers`);
+  }
+
+  linkTeacher(studentId: number, teacherId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${studentId}/teachers/${teacherId}/link`, null);
+  }
+
+  unlinkTeacher(studentId: number, teacherId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${studentId}/teachers/${teacherId}/unlink`);
   }
 }

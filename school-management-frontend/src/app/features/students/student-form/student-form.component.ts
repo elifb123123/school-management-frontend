@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentService } from '../../../core/services/student.service';
 import { SchoolService } from '../../../core/services/school.service';
 import { SchoolResponse } from '../../../core/models/school.model';
+import { SessionService } from '../../../core/services/session.service';
 import { extractErrorMessage } from '../../../core/utils/api-error';
 
 @Component({
@@ -33,7 +34,11 @@ export class StudentFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly studentService = inject(StudentService);
   private readonly schoolService = inject(SchoolService);
+  private readonly sessionService = inject(SessionService);
   private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly isPrincipalScoped = this.sessionService.session()?.role === 'principal';
+  private readonly homeRoute = this.isPrincipalScoped ? '/principal/students' : '/students';
 
   protected readonly form = new FormGroup({
     name: new FormControl('', {
@@ -58,6 +63,16 @@ export class StudentFormComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
+
+    if (this.isPrincipalScoped) {
+      this.form.patchValue({ schoolId: this.sessionService.session()!.entityId });
+      if (idParam) {
+        this.loadStudent(Number(idParam));
+      } else {
+        this.loading.set(false);
+      }
+      return;
+    }
 
     // StudentResponse only exposes schoolName, not schoolId, so the schools list must be
     // loaded before an existing student's school selection can be resolved and pre-filled.
@@ -84,19 +99,21 @@ export class StudentFormComponent implements OnInit {
 
     this.studentService.getStudent(id).subscribe({
       next: (student) => {
-        const school = this.schools().find((s) => s.schoolName === student.schoolName);
+        const schoolId = this.isPrincipalScoped
+          ? this.sessionService.session()!.entityId
+          : (this.schools().find((s) => s.schoolName === student.schoolName)?.id ?? null);
         this.form.patchValue({
           name: student.name,
           email: student.email,
           dateOfBirth: student.dateOfBirth,
-          schoolId: school?.id ?? null
+          schoolId
         });
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
         this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
-        this.router.navigate(['/students']);
+        this.router.navigate([this.homeRoute]);
       }
     });
   }
@@ -128,7 +145,7 @@ export class StudentFormComponent implements OnInit {
           'Close',
           { duration: 3000 }
         );
-        this.router.navigate(['/students']);
+        this.router.navigate([this.homeRoute]);
       },
       error: (err: HttpErrorResponse) => {
         this.saving.set(false);
@@ -138,6 +155,6 @@ export class StudentFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/students']);
+    this.router.navigate([this.homeRoute]);
   }
 }

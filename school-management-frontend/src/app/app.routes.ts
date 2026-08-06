@@ -1,7 +1,125 @@
 import { Routes } from '@angular/router';
 
+import { sessionGuard } from './core/guards/session.guard';
+
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'schools' },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/session-picker/session-picker.component').then(
+        (m) => m.SessionPickerComponent
+      )
+  },
+
+  // --- Principal (scoped to their own school) ---
+  { path: 'principal', pathMatch: 'full', redirectTo: 'principal/school' },
+  {
+    path: 'principal/school',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/schools/school-form/school-form.component').then(
+        (m) => m.SchoolFormComponent
+      )
+  },
+  {
+    path: 'principal/teachers',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/principal/principal-teacher-list/principal-teacher-list.component').then(
+        (m) => m.PrincipalTeacherListComponent
+      )
+  },
+  {
+    path: 'principal/teachers/new',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/teachers/teacher-form/teacher-form.component').then(
+        (m) => m.TeacherFormComponent
+      )
+  },
+  {
+    path: 'principal/teachers/:id/edit',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/teachers/teacher-form/teacher-form.component').then(
+        (m) => m.TeacherFormComponent
+      )
+  },
+  {
+    path: 'principal/teachers/:id/students',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/teachers/teacher-students/teacher-students.component').then(
+        (m) => m.TeacherStudentsComponent
+      )
+  },
+  {
+    path: 'principal/students',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/principal/principal-student-list/principal-student-list.component').then(
+        (m) => m.PrincipalStudentListComponent
+      )
+  },
+  {
+    path: 'principal/students/new',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/students/student-form/student-form.component').then(
+        (m) => m.StudentFormComponent
+      )
+  },
+  {
+    path: 'principal/students/:id/edit',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/students/student-form/student-form.component').then(
+        (m) => m.StudentFormComponent
+      )
+  },
+  {
+    path: 'principal/students/:id/teachers',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/students/student-teachers/student-teachers.component').then(
+        (m) => m.StudentTeachersComponent
+      )
+  },
+
+  // --- Teacher (own profile + own students) ---
+  {
+    path: 'teacher',
+    canActivate: [sessionGuard],
+    data: { role: 'teacher' },
+    loadComponent: () =>
+      import('./features/teacher-dashboard/teacher-dashboard.component').then(
+        (m) => m.TeacherDashboardComponent
+      )
+  },
+
+  // --- Student (own profile + own teachers) ---
+  {
+    path: 'student',
+    canActivate: [sessionGuard],
+    data: { role: 'student' },
+    loadComponent: () =>
+      import('./features/student-dashboard/student-dashboard.component').then(
+        (m) => m.StudentDashboardComponent
+      )
+  },
+
+  // --- Legacy unscoped admin routes (no role fits "browse everything across all
+  // schools" today, so nothing links here anymore, but the working screens are left
+  // in place rather than deleted) ---
   {
     path: 'schools',
     loadComponent: () =>
@@ -45,6 +163,13 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'teachers/:id/students',
+    loadComponent: () =>
+      import('./features/teachers/teacher-students/teacher-students.component').then(
+        (m) => m.TeacherStudentsComponent
+      )
+  },
+  {
     path: 'students',
     loadComponent: () =>
       import('./features/students/student-list/student-list.component').then(
@@ -63,6 +188,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/students/student-form/student-form.component').then(
         (m) => m.StudentFormComponent
+      )
+  },
+  {
+    path: 'students/:id/teachers',
+    loadComponent: () =>
+      import('./features/students/student-teachers/student-teachers.component').then(
+        (m) => m.StudentTeachersComponent
       )
   }
 ];

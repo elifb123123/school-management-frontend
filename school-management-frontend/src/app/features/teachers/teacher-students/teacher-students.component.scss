@@ -1,0 +1,30 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.add-row {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.add-field {
+  width: 100%;
+  max-width: 320px;
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.empty-state {
+  color: var(--mat-sys-on-surface-variant);
+  padding: 32px 0;
+  text-align: center;
+}

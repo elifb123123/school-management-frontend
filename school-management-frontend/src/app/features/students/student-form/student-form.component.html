@@ -37,17 +37,19 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>School</mat-label>
-      <mat-select formControlName="schoolId">
-        @for (school of schools(); track school.id) {
-          <mat-option [value]="school.id">{{ school.schoolName }}</mat-option>
+    @if (!isPrincipalScoped) {
+      <mat-form-field appearance="outline">
+        <mat-label>School</mat-label>
+        <mat-select formControlName="schoolId">
+          @for (school of schools(); track school.id) {
+            <mat-option [value]="school.id">{{ school.schoolName }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.schoolId.hasError('required') && form.controls.schoolId.touched) {
+          <mat-error>School is required.</mat-error>
         }
-      </mat-select>
-      @if (form.controls.schoolId.hasError('required') && form.controls.schoolId.touched) {
-        <mat-error>School is required.</mat-error>
-      }
-    </mat-form-field>
+      </mat-form-field>
+    }
 
     <div class="form-actions">
       <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Cancel</button>

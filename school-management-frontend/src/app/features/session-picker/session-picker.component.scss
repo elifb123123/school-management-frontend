@@ -1,0 +1,40 @@
+.picker-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.picker-card {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 24px;
+}
+
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entity-field {
+  width: 100%;
+}
+
+.picker-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}

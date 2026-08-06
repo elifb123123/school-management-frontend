@@ -1,20 +1,33 @@
-<mat-toolbar color="primary">
-  <span>School Management</span>
-</mat-toolbar>
+@if (session(); as s) {
+  <mat-toolbar color="primary">
+    <span>School Management</span>
+    <span class="spacer"></span>
+    <span class="session-label">{{ s.role }} — {{ s.label }}</span>
+    <button mat-button (click)="switchRole()">Switch role</button>
+  </mat-toolbar>
 
-<mat-sidenav-container class="shell-container">
-  <mat-sidenav mode="side" opened class="shell-sidenav">
-    <mat-nav-list>
-      @for (item of navItems; track item.path) {
-        <a mat-list-item [routerLink]="item.path" routerLinkActive="active-link">
-          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-          <span matListItemTitle>{{ item.label }}</span>
-        </a>
-      }
-    </mat-nav-list>
-  </mat-sidenav>
+  @if (navItems().length > 0) {
+    <mat-sidenav-container class="shell-container">
+      <mat-sidenav mode="side" opened class="shell-sidenav">
+        <mat-nav-list>
+          @for (item of navItems(); track item.path) {
+            <a mat-list-item [routerLink]="item.path" routerLinkActive="active-link">
+              <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+              <span matListItemTitle>{{ item.label }}</span>
+            </a>
+          }
+        </mat-nav-list>
+      </mat-sidenav>
 
-  <mat-sidenav-content class="shell-content">
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+      <mat-sidenav-content class="shell-content">
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  } @else {
+    <div class="shell-content shell-content--full">
+      <router-outlet></router-outlet>
+    </div>
+  }
+} @else {
+  <router-outlet></router-outlet>
+}
