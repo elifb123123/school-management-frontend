@@ -1,0 +1,17 @@
+.school-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
