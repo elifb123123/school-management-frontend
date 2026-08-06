@@ -26,5 +26,8 @@ interface NavItem {
   styleUrl: './shell.component.scss'
 })
 export class ShellComponent {
-  protected readonly navItems: NavItem[] = [{ label: 'Schools', path: '/schools', icon: 'school' }];
+  protected readonly navItems: NavItem[] = [
+    { label: 'Schools', path: '/schools', icon: 'school' },
+    { label: 'Teachers', path: '/teachers', icon: 'person' }
+  ];
 }

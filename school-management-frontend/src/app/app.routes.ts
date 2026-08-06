@@ -22,5 +22,26 @@ export const routes: Routes = [
       import('./features/schools/school-form/school-form.component').then(
         (m) => m.SchoolFormComponent
       )
+  },
+  {
+    path: 'teachers',
+    loadComponent: () =>
+      import('./features/teachers/teacher-list/teacher-list.component').then(
+        (m) => m.TeacherListComponent
+      )
+  },
+  {
+    path: 'teachers/new',
+    loadComponent: () =>
+      import('./features/teachers/teacher-form/teacher-form.component').then(
+        (m) => m.TeacherFormComponent
+      )
+  },
+  {
+    path: 'teachers/:id/edit',
+    loadComponent: () =>
+      import('./features/teachers/teacher-form/teacher-form.component').then(
+        (m) => m.TeacherFormComponent
+      )
   }
 ];
