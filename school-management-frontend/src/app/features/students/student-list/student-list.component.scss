@@ -1,0 +1,32 @@
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  width: 100%;
+  max-width: 320px;
+}
+
+.student-table {
+  width: 100%;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.empty-state {
+  color: var(--mat-sys-on-surface-variant);
+  padding: 32px 0;
+  text-align: center;
+}

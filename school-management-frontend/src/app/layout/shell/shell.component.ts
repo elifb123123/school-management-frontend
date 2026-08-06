@@ -28,6 +28,7 @@ interface NavItem {
 export class ShellComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Schools', path: '/schools', icon: 'school' },
-    { label: 'Teachers', path: '/teachers', icon: 'person' }
+    { label: 'Teachers', path: '/teachers', icon: 'person' },
+    { label: 'Students', path: '/students', icon: 'groups' }
   ];
 }
