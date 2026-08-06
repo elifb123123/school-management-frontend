@@ -25,6 +25,20 @@ export class SessionService {
     sessionStorage.removeItem(STORAGE_KEY);
   }
 
+  /**
+   * Updates the cached display label (e.g. after the current user renames
+   * themselves or their school) without disturbing role/entityId.
+   */
+  updateLabel(label: string): void {
+    const current = this._session();
+    if (!current) {
+      return;
+    }
+    const updated: Session = { ...current, label };
+    this._session.set(updated);
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  }
+
   private restore(): Session | null {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) {

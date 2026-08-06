@@ -105,6 +105,15 @@ export const routes: Routes = [
         (m) => m.TeacherDashboardComponent
       )
   },
+  {
+    path: 'teacher/edit',
+    canActivate: [sessionGuard],
+    data: { role: 'teacher' },
+    loadComponent: () =>
+      import('./features/teachers/teacher-form/teacher-form.component').then(
+        (m) => m.TeacherFormComponent
+      )
+  },
 
   // --- Student (own profile + own teachers) ---
   {
@@ -114,6 +123,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/student-dashboard/student-dashboard.component').then(
         (m) => m.StudentDashboardComponent
+      )
+  },
+  {
+    path: 'student/edit',
+    canActivate: [sessionGuard],
+    data: { role: 'student' },
+    loadComponent: () =>
+      import('./features/students/student-form/student-form.component').then(
+        (m) => m.StudentFormComponent
       )
   },
 

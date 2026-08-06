@@ -1,12 +1,19 @@
-.list-header {
+.page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: var(--app-space-lg);
+  gap: var(--app-space-md);
+}
+
+.page-subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
 }
 
 .student-table {
   width: 100%;
+  background: transparent;
 }
 
 .actions-cell {
@@ -17,11 +24,11 @@
 .loading-row {
   display: flex;
   justify-content: center;
-  padding: 32px 0;
+  padding: 48px 0;
 }
 
 .empty-state {
   color: var(--mat-sys-on-surface-variant);
-  padding: 32px 0;
+  padding: 48px 0;
   text-align: center;
 }

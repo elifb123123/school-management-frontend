@@ -1,14 +1,13 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatListModule } from '@angular/material/list';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StudentService } from '../../../core/services/student.service';
@@ -17,17 +16,19 @@ import { SchoolService } from '../../../core/services/school.service';
 import { SessionService } from '../../../core/services/session.service';
 import { TeacherResponse } from '../../../core/models/teacher.model';
 import { extractErrorMessage } from '../../../core/utils/api-error';
+import {
+  PeoplePickerDialogComponent,
+  PersonOption
+} from '../../../shared/people-picker-dialog/people-picker-dialog.component';
 
 @Component({
   selector: 'app-student-teachers',
   imports: [
-    ReactiveFormsModule,
     RouterLink,
     MatListModule,
-    MatFormFieldModule,
-    MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './student-teachers.component.html',
@@ -39,6 +40,7 @@ export class StudentTeachersComponent implements OnInit {
   private readonly teacherService = inject(TeacherService);
   private readonly schoolService = inject(SchoolService);
   private readonly sessionService = inject(SessionService);
+  private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
   private studentId!: number;
@@ -51,7 +53,6 @@ export class StudentTeachersComponent implements OnInit {
   protected readonly allTeachers = signal<TeacherResponse[]>([]);
   protected readonly loading = signal(false);
   protected readonly linking = signal(false);
-  protected readonly selectedTeacherId = new FormControl<number | null>(null);
 
   protected readonly availableTeachers = computed(() => {
     const linkedIds = new Set(this.linkedTeachers().map((t) => t.id));
@@ -96,17 +97,31 @@ export class StudentTeachersComponent implements OnInit {
     });
   }
 
-  linkSelectedTeacher(): void {
-    const teacherId = this.selectedTeacherId.value;
-    if (teacherId === null) {
-      return;
-    }
+  openAddTeacherDialog(): void {
+    const dialogRef = this.dialog.open(PeoplePickerDialogComponent, {
+      data: {
+        title: 'Add a teacher',
+        searchPlaceholder: 'Search teachers by name or email',
+        emptyMessage: 'No teachers available to link.',
+        people: this.availableTeachers().map(
+          (t): PersonOption => ({ id: t.id, name: t.name, email: t.email })
+        )
+      }
+    });
 
+    dialogRef.afterClosed().subscribe((selected: PersonOption | undefined) => {
+      if (!selected) {
+        return;
+      }
+      this.linkTeacher(selected.id);
+    });
+  }
+
+  private linkTeacher(teacherId: number): void {
     this.linking.set(true);
     this.studentService.linkTeacher(this.studentId, teacherId).subscribe({
       next: () => {
         this.linking.set(false);
-        this.selectedTeacherId.reset();
         this.snackBar.open('Teacher linked.', 'Close', { duration: 3000 });
         this.loadLinkedTeachers();
       },

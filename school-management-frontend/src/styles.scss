@@ -10,13 +10,26 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        primary: mat.$violet-palette,
+        tertiary: mat.$cyan-palette,
       ),
       typography: Roboto,
       density: 0,
     )
   );
+
+  // Design tokens shared across the app — a small, deliberate set rather than
+  // scattering magic numbers through every component's stylesheet.
+  --app-radius-sm: 8px;
+  --app-radius-md: 12px;
+  --app-radius-lg: 16px;
+  --app-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  --app-shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.05), 0 12px 32px -8px rgba(0, 0, 0, 0.16);
+  --app-space-xs: 4px;
+  --app-space-sm: 8px;
+  --app-space-md: 16px;
+  --app-space-lg: 24px;
+  --app-space-xl: 32px;
 }
 
 body {
@@ -25,10 +38,9 @@ body {
   // user's system settings.
   color-scheme: light;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
+  // A faint tint behind every page, so the white/near-white surface cards
+  // read as elevated rather than blending into the page background.
+  background-color: var(--mat-sys-surface-container-low);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
 
@@ -36,4 +48,61 @@ body {
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+// Shared elevated-surface treatment for list/form/dashboard content — the one
+// visual "container" pattern reused across the whole app instead of every
+// feature redefining its own card shadow/radius/padding.
+.surface-card {
+  background: var(--mat-sys-surface);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-card);
+  padding: var(--app-space-lg);
+}
+
+// Smooth, subtle motion on the interactive surfaces we add ourselves —
+// Material's own components already handle their own transitions.
+.surface-card,
+.mat-mdc-row,
+a.mat-mdc-list-item,
+.mat-mdc-list-item {
+  transition:
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.mat-mdc-table .mat-mdc-row:hover {
+  background-color: var(--mat-sys-surface-container-low);
+}

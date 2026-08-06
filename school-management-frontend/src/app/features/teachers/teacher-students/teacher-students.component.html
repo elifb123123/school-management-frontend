@@ -1,46 +1,57 @@
 <div class="page-header">
-  <h1>Manage students — {{ teacherName() }}</h1>
+  <div>
+    <h1>Manage students</h1>
+    <p class="page-subtitle">{{ teacherName() }}</p>
+  </div>
   <a mat-button [routerLink]="backRoute">
     <mat-icon>arrow_back</mat-icon>
     Back to teachers
   </a>
 </div>
 
-<div class="add-row">
-  <mat-form-field appearance="outline" class="add-field">
-    <mat-label>Add a student</mat-label>
-    <mat-select [formControl]="selectedStudentId">
-      @for (student of availableStudents(); track student.id) {
-        <mat-option [value]="student.id">{{ student.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <button
-    mat-flat-button
-    color="primary"
-    [disabled]="selectedStudentId.value === null || linking()"
-    (click)="linkSelectedStudent()"
-  >
-    {{ linking() ? 'Linking...' : 'Link' }}
-  </button>
-</div>
-
-@if (loading()) {
-  <div class="loading-row">
-    <mat-spinner diameter="32"></mat-spinner>
+<div class="surface-card">
+  <div class="section-header">
+    <h2>Linked students</h2>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="linking()"
+      (click)="openAddStudentDialog()"
+    >
+      <mat-icon>person_add</mat-icon>
+      Add student
+    </button>
   </div>
-} @else if (linkedStudents().length === 0) {
-  <p class="empty-state">No students linked to this teacher yet.</p>
-} @else {
-  <mat-list>
-    @for (student of linkedStudents(); track student.id) {
-      <mat-list-item>
-        <span matListItemTitle>{{ student.name }}</span>
-        <span matListItemLine>{{ student.email }}</span>
-        <button mat-icon-button matListItemMeta (click)="unlinkStudent(student)" aria-label="Unlink">
-          <mat-icon>link_off</mat-icon>
-        </button>
-      </mat-list-item>
-    }
-  </mat-list>
-}
+
+  @if (loading()) {
+    <div class="loading-row">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else if (linkedStudents().length === 0) {
+    <p class="empty-state">No students linked to this teacher yet.</p>
+  } @else {
+    <mat-list>
+      @for (student of linkedStudents(); track student.id) {
+        <mat-list-item>
+          <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
+          <span matListItemTitle>{{ student.name }}</span>
+          <span matListItemLine>{{ student.email }}</span>
+          <button
+            mat-icon-button
+            matListItemMeta
+            [matMenuTriggerFor]="menu"
+            aria-label="More options"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="unlinkStudent(student)">
+              <mat-icon>person_remove</mat-icon>
+              <span>Unassign Student</span>
+            </button>
+          </mat-menu>
+        </mat-list-item>
+      }
+    </mat-list>
+  }
+</div>

@@ -1,9 +1,28 @@
-@if (session(); as s) {
-  <mat-toolbar color="primary">
-    <span>School Management</span>
+@if (showChrome() && session(); as s) {
+  <mat-toolbar class="app-toolbar">
+    <div class="brand">
+      <span class="brand-mark">
+        <mat-icon>school</mat-icon>
+      </span>
+      <span class="brand-name">School Management</span>
+    </div>
     <span class="spacer"></span>
-    <span class="session-label">{{ s.role }} — {{ s.label }}</span>
-    <button mat-button (click)="switchRole()">Switch role</button>
+    <a
+      class="user-chip"
+      [routerLink]="profileRoute()"
+      routerLinkActive="user-chip--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      aria-label="View my profile"
+    >
+      <span class="user-avatar">{{ s.label.charAt(0) }}</span>
+      <span class="user-info">
+        <span class="user-name">{{ s.label }}</span>
+        <span class="user-role">{{ s.role }}</span>
+      </span>
+    </a>
+    <button mat-icon-button (click)="switchRole()" aria-label="Switch role">
+      <mat-icon>logout</mat-icon>
+    </button>
   </mat-toolbar>
 
   @if (navItems().length > 0) {
@@ -11,7 +30,12 @@
       <mat-sidenav mode="side" opened class="shell-sidenav">
         <mat-nav-list>
           @for (item of navItems(); track item.path) {
-            <a mat-list-item [routerLink]="item.path" routerLinkActive="active-link">
+            <a
+              mat-list-item
+              class="nav-link"
+              [routerLink]="item.path"
+              routerLinkActive="active-link"
+            >
               <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
               <span matListItemTitle>{{ item.label }}</span>
             </a>
@@ -20,12 +44,16 @@
       </mat-sidenav>
 
       <mat-sidenav-content class="shell-content">
-        <router-outlet></router-outlet>
+        <div class="shell-content-inner">
+          <router-outlet></router-outlet>
+        </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
   } @else {
     <div class="shell-content shell-content--full">
-      <router-outlet></router-outlet>
+      <div class="shell-content-inner">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   }
 } @else {

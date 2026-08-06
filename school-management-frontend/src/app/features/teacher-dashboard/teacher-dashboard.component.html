@@ -1,48 +1,83 @@
 @if (profile(); as p) {
-  <div class="profile-card">
-    <h1>{{ p.name }}</h1>
-    <p class="profile-line">{{ p.email }}</p>
-    <p class="profile-line">{{ p.schoolName }}</p>
+  <div class="surface-card profile-hero">
+    <div class="profile-hero-top">
+      <span class="profile-avatar-lg">{{ p.name.charAt(0) }}</span>
+      <div class="profile-heading">
+        <div class="profile-name-row">
+          <h1>{{ p.name }}</h1>
+          <span class="role-badge">Teacher</span>
+        </div>
+        <p class="profile-email">{{ p.email }}</p>
+      </div>
+      <span class="spacer"></span>
+      <a mat-stroked-button routerLink="/teacher/edit">
+        <mat-icon>edit</mat-icon>
+        Edit profile
+      </a>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <mat-icon>school</mat-icon>
+        <div>
+          <span class="detail-label">School</span>
+          <span class="detail-value">{{ p.schoolName }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>groups</mat-icon>
+        <div>
+          <span class="detail-label">Students</span>
+          <span class="detail-value">{{ linkedStudents().length }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 }
 
-<h2>My students</h2>
+<div class="surface-card">
+  <div class="section-header">
+    <h2>My students</h2>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="linking()"
+      (click)="openAddStudentDialog()"
+    >
+      <mat-icon>person_add</mat-icon>
+      Add student
+    </button>
+  </div>
 
-<div class="add-row">
-  <mat-form-field appearance="outline" class="add-field">
-    <mat-label>Add a student</mat-label>
-    <mat-select [formControl]="selectedStudentId">
-      @for (student of availableStudents(); track student.id) {
-        <mat-option [value]="student.id">{{ student.name }}</mat-option>
+  @if (loading()) {
+    <div class="loading-row">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else if (linkedStudents().length === 0) {
+    <p class="empty-state">No students linked yet.</p>
+  } @else {
+    <mat-list>
+      @for (student of linkedStudents(); track student.id) {
+        <mat-list-item>
+          <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
+          <span matListItemTitle>{{ student.name }}</span>
+          <span matListItemLine>{{ student.email }}</span>
+          <button
+            mat-icon-button
+            matListItemMeta
+            [matMenuTriggerFor]="menu"
+            aria-label="More options"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="unlinkStudent(student)">
+              <mat-icon>person_remove</mat-icon>
+              <span>Unassign Student</span>
+            </button>
+          </mat-menu>
+        </mat-list-item>
       }
-    </mat-select>
-  </mat-form-field>
-  <button
-    mat-flat-button
-    color="primary"
-    [disabled]="selectedStudentId.value === null || linking()"
-    (click)="linkSelectedStudent()"
-  >
-    {{ linking() ? 'Linking...' : 'Link' }}
-  </button>
+    </mat-list>
+  }
 </div>
-
-@if (loading()) {
-  <div class="loading-row">
-    <mat-spinner diameter="32"></mat-spinner>
-  </div>
-} @else if (linkedStudents().length === 0) {
-  <p class="empty-state">No students linked yet.</p>
-} @else {
-  <mat-list>
-    @for (student of linkedStudents(); track student.id) {
-      <mat-list-item>
-        <span matListItemTitle>{{ student.name }}</span>
-        <span matListItemLine>{{ student.email }}</span>
-        <button mat-icon-button matListItemMeta (click)="unlinkStudent(student)" aria-label="Unlink">
-          <mat-icon>link_off</mat-icon>
-        </button>
-      </mat-list-item>
-    }
-  </mat-list>
-}

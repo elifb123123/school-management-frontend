@@ -88,6 +88,9 @@ export class SchoolFormComponent implements OnInit {
     result.subscribe({
       next: () => {
         this.saving.set(false);
+        if (this.isPrincipalScoped) {
+          this.sessionService.updateLabel(request.schoolName);
+        }
         this.snackBar.open(
           this.isEditMode() ? 'School updated.' : 'School created.',
           'Close',

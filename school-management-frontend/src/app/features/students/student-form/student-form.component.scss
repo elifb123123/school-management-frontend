@@ -1,17 +1,28 @@
+.form-page {
+  max-width: 480px;
+}
+
+h1 {
+  margin-bottom: var(--app-space-lg);
+}
+
 .student-form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  gap: var(--app-space-sm);
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--app-space-sm);
+  margin-top: var(--app-space-sm);
+  padding-top: var(--app-space-md);
+  border-top: 1px solid var(--mat-sys-outline-variant);
 }
 
 .loading-row {
   display: flex;
   justify-content: center;
-  padding: 32px 0;
+  padding: 48px 0;
 }

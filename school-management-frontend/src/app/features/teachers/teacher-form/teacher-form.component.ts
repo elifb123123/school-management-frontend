@@ -38,7 +38,13 @@ export class TeacherFormComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly isPrincipalScoped = this.sessionService.session()?.role === 'principal';
-  private readonly homeRoute = this.isPrincipalScoped ? '/principal/teachers' : '/teachers';
+  protected readonly isSelfScoped = this.sessionService.session()?.role === 'teacher';
+  protected readonly hideSchoolField = this.isPrincipalScoped || this.isSelfScoped;
+  private readonly homeRoute = this.isPrincipalScoped
+    ? '/principal/teachers'
+    : this.isSelfScoped
+      ? '/teacher'
+      : '/teachers';
 
   protected readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -67,6 +73,23 @@ export class TeacherFormComponent implements OnInit {
       } else {
         this.loading.set(false);
       }
+      return;
+    }
+
+    if (this.isSelfScoped) {
+      // A teacher always edits themselves — never creates, never picks an id. Unlike the
+      // principal scope, a teacher's identity isn't the school, so the current schoolId
+      // still needs resolving via the schools list (same as the legacy path below).
+      this.schoolService.getSchools({ page: 0, size: 100 }).subscribe({
+        next: (page) => {
+          this.schools.set(page.content);
+          this.loadTeacher(this.sessionService.session()!.entityId);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.loading.set(false);
+          this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+        }
+      });
       return;
     }
 
@@ -126,6 +149,9 @@ export class TeacherFormComponent implements OnInit {
     result.subscribe({
       next: () => {
         this.saving.set(false);
+        if (this.isSelfScoped) {
+          this.sessionService.updateLabel(raw.name);
+        }
         this.snackBar.open(
           this.isEditMode() ? 'Teacher updated.' : 'Teacher created.',
           'Close',
