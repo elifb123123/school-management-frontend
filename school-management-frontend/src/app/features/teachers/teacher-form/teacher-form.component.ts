@@ -15,6 +15,7 @@ import { SchoolService } from '../../../core/services/school.service';
 import { SchoolResponse } from '../../../core/models/school.model';
 import { SessionService } from '../../../core/services/session.service';
 import { extractErrorMessage } from '../../../core/utils/api-error';
+import { formatBranch } from '../../../core/utils/format-branch';
 
 @Component({
   selector: 'app-teacher-form',
@@ -52,10 +53,13 @@ export class TeacherFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     }),
+    branch: new FormControl('', { nonNullable: true, validators: Validators.required }),
     schoolId: new FormControl<number | null>(null, { validators: Validators.required })
   });
 
   protected readonly schools = signal<SchoolResponse[]>([]);
+  protected readonly branches = signal<string[]>([]);
+  protected readonly formatBranch = formatBranch;
   protected readonly isEditMode = signal(false);
   protected readonly loading = signal(false);
   protected readonly saving = signal(false);
@@ -65,6 +69,12 @@ export class TeacherFormComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
+
+    this.teacherService.getBranches().subscribe({
+      next: (branches) => this.branches.set(branches),
+      error: (err: HttpErrorResponse) =>
+        this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 })
+    });
 
     if (this.isPrincipalScoped) {
       this.form.patchValue({ schoolId: this.sessionService.session()!.entityId });
@@ -121,7 +131,12 @@ export class TeacherFormComponent implements OnInit {
         const schoolId = this.isPrincipalScoped
           ? this.sessionService.session()!.entityId
           : (this.schools().find((s) => s.schoolName === teacher.schoolName)?.id ?? null);
-        this.form.patchValue({ name: teacher.name, email: teacher.email, schoolId });
+        this.form.patchValue({
+          name: teacher.name,
+          email: teacher.email,
+          branch: teacher.branch,
+          schoolId
+        });
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -140,7 +155,12 @@ export class TeacherFormComponent implements OnInit {
 
     this.saving.set(true);
     const raw = this.form.getRawValue();
-    const request = { name: raw.name, email: raw.email, schoolId: raw.schoolId! };
+    const request = {
+      name: raw.name,
+      email: raw.email,
+      branch: raw.branch,
+      schoolId: raw.schoolId!
+    };
     const result =
       this.isEditMode() && this.teacherId !== null
         ? this.teacherService.updateTeacher(this.teacherId, request)

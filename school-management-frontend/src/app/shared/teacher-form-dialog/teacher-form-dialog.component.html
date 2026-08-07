@@ -25,6 +25,18 @@
           <mat-error>Enter a valid email address.</mat-error>
         }
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Branch</mat-label>
+        <mat-select formControlName="branch">
+          @for (branch of data.branches; track branch) {
+            <mat-option [value]="branch">{{ formatBranch(branch) }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.branch.hasError('required') && form.controls.branch.touched) {
+          <mat-error>Branch is required.</mat-error>
+        }
+      </mat-form-field>
     </form>
   </mat-dialog-content>
 

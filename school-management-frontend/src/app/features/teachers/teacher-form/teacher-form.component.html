@@ -26,6 +26,18 @@
           }
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Branch</mat-label>
+          <mat-select formControlName="branch">
+            @for (branch of branches(); track branch) {
+              <mat-option [value]="branch">{{ formatBranch(branch) }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.branch.hasError('required') && form.controls.branch.touched) {
+            <mat-error>Branch is required.</mat-error>
+          }
+        </mat-form-field>
+
         @if (!hideSchoolField) {
           <mat-form-field appearance="outline">
             <mat-label>School</mat-label>

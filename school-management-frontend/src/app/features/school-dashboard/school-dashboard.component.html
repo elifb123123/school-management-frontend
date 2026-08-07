@@ -116,6 +116,16 @@
           <mat-icon matPrefix>search</mat-icon>
           <input matInput [formControl]="teacherEmailFilter" />
         </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Filter by branch</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <mat-select [formControl]="teacherBranchFilter">
+            <mat-option value="">All branches</mat-option>
+            @for (b of branches(); track b) {
+              <mat-option [value]="b">{{ formatBranch(b) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
 
       @if (loadingTeachers()) {
@@ -133,6 +143,9 @@
               <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
               <span matListItemTitle>{{ teacher.name }}</span>
               <span matListItemLine>{{ teacher.email }}</span>
+              <span matListItemLine>
+                <span class="branch-badge">{{ formatBranch(teacher.branch) }}</span>
+              </span>
               <span matListItemMeta class="row-actions" (click)="$event.stopPropagation()">
                 <button
                   mat-icon-button

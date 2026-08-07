@@ -10,6 +10,7 @@ import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,6 +36,7 @@ import {
   StudentFormDialogComponent,
   StudentFormDialogResult
 } from '../../shared/student-form-dialog/student-form-dialog.component';
+import { formatBranch } from '../../core/utils/format-branch';
 
 type DashboardTab = 'teachers' | 'students';
 
@@ -48,6 +50,7 @@ type DashboardTab = 'teachers' | 'students';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './school-dashboard.component.html',
@@ -85,6 +88,8 @@ export class SchoolDashboardComponent implements OnInit {
   protected readonly loadingTeachers = signal(false);
   protected readonly addingTeacher = signal(false);
   protected readonly editingTeacherId = signal<number | null>(null);
+  protected readonly branches = signal<string[]>([]);
+  protected readonly formatBranch = formatBranch;
   private teachersLoaded = false;
 
   protected readonly students = signal<StudentResponse[]>([]);
@@ -95,18 +100,26 @@ export class SchoolDashboardComponent implements OnInit {
 
   protected readonly teacherNameFilter = new FormControl('', { nonNullable: true });
   protected readonly teacherEmailFilter = new FormControl('', { nonNullable: true });
+  protected readonly teacherBranchFilter = new FormControl('', { nonNullable: true });
   private readonly teacherNameFilterValue = toSignal(this.teacherNameFilter.valueChanges, {
     initialValue: ''
   });
   private readonly teacherEmailFilterValue = toSignal(this.teacherEmailFilter.valueChanges, {
     initialValue: ''
   });
+  private readonly teacherBranchFilterValue = toSignal(this.teacherBranchFilter.valueChanges, {
+    initialValue: ''
+  });
 
   protected readonly filteredTeachers = computed(() => {
     const name = this.teacherNameFilterValue().trim().toLowerCase();
     const email = this.teacherEmailFilterValue().trim().toLowerCase();
+    const branch = this.teacherBranchFilterValue();
     return this.teachers().filter(
-      (t) => t.name.toLowerCase().includes(name) && t.email.toLowerCase().includes(email)
+      (t) =>
+        t.name.toLowerCase().includes(name) &&
+        t.email.toLowerCase().includes(email) &&
+        (branch === '' || t.branch === branch)
     );
   });
 
@@ -163,6 +176,12 @@ export class SchoolDashboardComponent implements OnInit {
 
     this.schoolService.getStudentsBySchool(this.schoolId, { page: 0, size: 1 }).subscribe({
       next: (page) => this.studentCount.set(page.totalElements)
+    });
+
+    this.teacherService.getBranches().subscribe({
+      next: (branches) => this.branches.set(branches),
+      error: (err: HttpErrorResponse) =>
+        this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 })
     });
 
     this.loadTeachers();
@@ -226,7 +245,7 @@ export class SchoolDashboardComponent implements OnInit {
 
   openAddTeacherDialog(): void {
     this.dialog
-      .open(TeacherFormDialogComponent)
+      .open(TeacherFormDialogComponent, { data: { branches: this.branches() } })
       .afterClosed()
       .subscribe((result: TeacherFormDialogResult | undefined) => {
         if (!result) {
@@ -256,7 +275,10 @@ export class SchoolDashboardComponent implements OnInit {
     this.editingTeacherId.set(teacher.id);
     this.dialog
       .open(TeacherFormDialogComponent, {
-        data: { initial: { name: teacher.name, email: teacher.email } }
+        data: {
+          initial: { name: teacher.name, email: teacher.email, branch: teacher.branch },
+          branches: this.branches()
+        }
       })
       .afterClosed()
       .subscribe((result: TeacherFormDialogResult | undefined) => {

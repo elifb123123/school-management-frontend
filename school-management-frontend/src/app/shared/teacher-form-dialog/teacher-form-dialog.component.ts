@@ -4,16 +4,21 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+
+import { formatBranch } from '../../core/utils/format-branch';
 
 export interface TeacherFormDialogResult {
   name: string;
   email: string;
+  branch: string;
 }
 
 export interface TeacherFormDialogData {
   initial?: TeacherFormDialogResult;
+  branches: string[];
 }
 
 @Component({
@@ -23,6 +28,7 @@ export interface TeacherFormDialogData {
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatIconModule,
     MatButtonModule
   ],
@@ -31,20 +37,23 @@ export interface TeacherFormDialogData {
 })
 export class TeacherFormDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<TeacherFormDialogComponent>);
-  private readonly data = inject<TeacherFormDialogData | null>(MAT_DIALOG_DATA, {
-    optional: true
-  });
+  protected readonly data = inject<TeacherFormDialogData>(MAT_DIALOG_DATA);
 
-  protected readonly isEditMode = !!this.data?.initial;
+  protected readonly isEditMode = !!this.data.initial;
+  protected readonly formatBranch = formatBranch;
 
   protected readonly form = new FormGroup({
-    name: new FormControl(this.data?.initial?.name ?? '', {
+    name: new FormControl(this.data.initial?.name ?? '', {
       nonNullable: true,
       validators: Validators.required
     }),
-    email: new FormControl(this.data?.initial?.email ?? '', {
+    email: new FormControl(this.data.initial?.email ?? '', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
+    }),
+    branch: new FormControl(this.data.initial?.branch ?? '', {
+      nonNullable: true,
+      validators: Validators.required
     })
   });
 

@@ -15,6 +15,7 @@ import { SchoolService } from '../../core/services/school.service';
 import { TeacherResponse } from '../../core/models/teacher.model';
 import { StudentResponse } from '../../core/models/student.model';
 import { extractErrorMessage } from '../../core/utils/api-error';
+import { formatBranch } from '../../core/utils/format-branch';
 import {
   PeoplePickerDialogComponent,
   PersonOption
@@ -45,6 +46,7 @@ export class TeacherDetailComponent implements OnInit {
   private readonly teacherId = Number(this.route.snapshot.paramMap.get('teacherId'));
 
   protected readonly backRoute = `/school/${this.schoolId}`;
+  protected readonly formatBranch = formatBranch;
 
   protected readonly profile = signal<TeacherResponse | null>(null);
   protected readonly linkedStudents = signal<StudentResponse[]>([]);

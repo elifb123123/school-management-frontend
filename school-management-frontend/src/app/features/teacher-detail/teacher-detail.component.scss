@@ -57,6 +57,19 @@
   letter-spacing: 0.03em;
 }
 
+.branch-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 .profile-email {
   color: var(--mat-sys-on-surface-variant);
   margin-top: 4px;

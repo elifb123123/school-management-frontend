@@ -17,12 +17,20 @@
         <div class="profile-name-row">
           <h1>{{ p.name }}</h1>
           <span class="role-badge">Teacher</span>
+          <span class="branch-badge">{{ formatBranch(p.branch) }}</span>
         </div>
         <p class="profile-email">{{ p.email }}</p>
       </div>
     </div>
 
     <div class="profile-details">
+      <div class="detail-item">
+        <mat-icon>menu_book</mat-icon>
+        <div>
+          <span class="detail-label">Branch</span>
+          <span class="detail-value">{{ formatBranch(p.branch) }}</span>
+        </div>
+      </div>
       <div class="detail-item">
         <mat-icon>school</mat-icon>
         <div>

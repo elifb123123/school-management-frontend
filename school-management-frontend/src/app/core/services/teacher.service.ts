@@ -30,6 +30,10 @@ export class TeacherService {
     return this.http.get<TeacherResponse>(`${this.baseUrl}/${id}`);
   }
 
+  getBranches(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/branches`);
+  }
+
   createTeacher(request: TeacherRequest): Observable<TeacherResponse> {
     return this.http.post<TeacherResponse>(this.baseUrl, request);
   }
