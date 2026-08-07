@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,17 +15,31 @@ export interface PersonOption {
   email: string;
 }
 
+export interface PeoplePickerDetailLink {
+  schoolId: number;
+  kind: 'teacher' | 'student';
+}
+
 export interface PeoplePickerDialogData {
   title: string;
   searchPlaceholder: string;
   emptyMessage: string;
   people: PersonOption[];
+  /**
+   * When set, each person's name becomes a link to their /school/:schoolId
+   * detail page (in addition to the "Link" action). Only meaningful when the
+   * dialog is opened from a principal-scoped page that has access to that
+   * route — omitted elsewhere so those callers keep the original
+   * click-row-to-select behavior unchanged.
+   */
+  linkToDetail?: PeoplePickerDetailLink;
 }
 
 @Component({
   selector: 'app-people-picker-dialog',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -53,6 +68,15 @@ export class PeoplePickerDialogComponent {
 
   select(person: PersonOption): void {
     this.dialogRef.close(person);
+  }
+
+  detailRoute(person: PersonOption): unknown[] {
+    const link = this.data.linkToDetail!;
+    return ['/school', link.schoolId, link.kind === 'teacher' ? 'teachers' : 'students', person.id];
+  }
+
+  closeForNavigation(): void {
+    this.dialogRef.close();
   }
 
   selectFirstMatch(): void {

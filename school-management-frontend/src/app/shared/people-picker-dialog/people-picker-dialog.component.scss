@@ -120,6 +120,41 @@
   flex-shrink: 0;
 }
 
+.result-row--split {
+  padding: 6px 8px 6px 8px;
+
+  &:hover {
+    background: var(--mat-sys-surface-container);
+  }
+}
+
+.result-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+  padding: 4px;
+  border-radius: var(--app-radius-md);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover .result-name,
+  &:focus-visible .result-name {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+}
+
+.link-action {
+  flex-shrink: 0;
+}
+
 .empty-state {
   color: var(--mat-sys-on-surface-variant);
   text-align: center;

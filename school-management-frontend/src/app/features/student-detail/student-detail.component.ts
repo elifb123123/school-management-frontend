@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatListModule } from '@angular/material/list';
@@ -35,6 +35,7 @@ import {
 })
 export class StudentDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly studentService = inject(StudentService);
   private readonly schoolService = inject(SchoolService);
   private readonly dialog = inject(MatDialog);
@@ -92,6 +93,10 @@ export class StudentDetailComponent implements OnInit {
     });
   }
 
+  viewTeacher(teacher: TeacherResponse): void {
+    this.router.navigate(['/school', this.schoolId, 'teachers', teacher.id]);
+  }
+
   openLinkTeacherDialog(): void {
     const dialogRef = this.dialog.open(PeoplePickerDialogComponent, {
       data: {
@@ -100,7 +105,8 @@ export class StudentDetailComponent implements OnInit {
         emptyMessage: 'No teachers available to link.',
         people: this.availableTeachers().map(
           (t): PersonOption => ({ id: t.id, name: t.name, email: t.email })
-        )
+        ),
+        linkToDetail: { schoolId: this.schoolId, kind: 'teacher' }
       }
     });
 

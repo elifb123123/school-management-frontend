@@ -120,6 +120,15 @@
   }
 }
 
+.clickable-row {
+  cursor: pointer;
+  border-radius: var(--app-radius-md);
+
+  &:hover {
+    background: var(--mat-sys-surface-container);
+  }
+}
+
 .avatar {
   display: flex;
   align-items: center;

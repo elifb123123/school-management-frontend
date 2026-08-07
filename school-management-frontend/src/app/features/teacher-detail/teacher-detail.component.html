@@ -68,7 +68,7 @@
   } @else {
     <mat-list>
       @for (student of linkedStudents(); track student.id) {
-        <mat-list-item>
+        <mat-list-item class="clickable-row" (click)="viewStudent(student)">
           <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
           <span matListItemTitle>{{ student.name }}</span>
           <span matListItemLine>{{ student.email }}</span>
@@ -77,6 +77,7 @@
             matListItemMeta
             [matMenuTriggerFor]="menu"
             aria-label="More options"
+            (click)="$event.stopPropagation()"
           >
             <mat-icon>more_vert</mat-icon>
           </button>
