@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 export interface TeacherFormDialogResult {
   name: string;
   email: string;
+}
+
+export interface TeacherFormDialogData {
+  initial?: TeacherFormDialogResult;
 }
 
 @Component({
@@ -27,10 +31,18 @@ export interface TeacherFormDialogResult {
 })
 export class TeacherFormDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<TeacherFormDialogComponent>);
+  private readonly data = inject<TeacherFormDialogData | null>(MAT_DIALOG_DATA, {
+    optional: true
+  });
+
+  protected readonly isEditMode = !!this.data?.initial;
 
   protected readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-    email: new FormControl('', {
+    name: new FormControl(this.data?.initial?.name ?? '', {
+      nonNullable: true,
+      validators: Validators.required
+    }),
+    email: new FormControl(this.data?.initial?.email ?? '', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     })

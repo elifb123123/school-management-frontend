@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,10 @@ export interface StudentFormDialogResult {
   name: string;
   email: string;
   dateOfBirth: string;
+}
+
+export interface StudentFormDialogData {
+  initial?: StudentFormDialogResult;
 }
 
 @Component({
@@ -28,17 +32,25 @@ export interface StudentFormDialogResult {
 })
 export class StudentFormDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<StudentFormDialogComponent>);
+  private readonly data = inject<StudentFormDialogData | null>(MAT_DIALOG_DATA, {
+    optional: true
+  });
+
+  protected readonly isEditMode = !!this.data?.initial;
 
   protected readonly form = new FormGroup({
-    name: new FormControl('', {
+    name: new FormControl(this.data?.initial?.name ?? '', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(20)]
     }),
-    email: new FormControl('', {
+    email: new FormControl(this.data?.initial?.email ?? '', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     }),
-    dateOfBirth: new FormControl('', { nonNullable: true, validators: Validators.required })
+    dateOfBirth: new FormControl(this.data?.initial?.dateOfBirth ?? '', {
+      nonNullable: true,
+      validators: Validators.required
+    })
   });
 
   submit(): void {

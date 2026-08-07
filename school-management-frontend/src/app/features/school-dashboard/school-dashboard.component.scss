@@ -125,6 +125,12 @@
   }
 }
 
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .avatar {
   display: flex;
   align-items: center;

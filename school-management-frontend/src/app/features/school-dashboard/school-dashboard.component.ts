@@ -82,11 +82,13 @@ export class SchoolDashboardComponent implements OnInit {
   protected readonly teachers = signal<TeacherResponse[]>([]);
   protected readonly loadingTeachers = signal(false);
   protected readonly addingTeacher = signal(false);
+  protected readonly editingTeacherId = signal<number | null>(null);
   private teachersLoaded = false;
 
   protected readonly students = signal<StudentResponse[]>([]);
   protected readonly loadingStudents = signal(false);
   protected readonly addingStudent = signal(false);
+  protected readonly editingStudentId = signal<number | null>(null);
   private studentsLoaded = false;
 
   // Reacts to the shell's top-right "Edit Profile" menu — a different
@@ -198,6 +200,37 @@ export class SchoolDashboardComponent implements OnInit {
       });
   }
 
+  editTeacher(teacher: TeacherResponse): void {
+    this.editingTeacherId.set(teacher.id);
+    this.dialog
+      .open(TeacherFormDialogComponent, {
+        data: { initial: { name: teacher.name, email: teacher.email } }
+      })
+      .afterClosed()
+      .subscribe((result: TeacherFormDialogResult | undefined) => {
+        if (!result) {
+          this.editingTeacherId.set(null);
+          return;
+        }
+
+        this.teacherService
+          .updateTeacher(teacher.id, { ...result, schoolId: this.schoolId })
+          .subscribe({
+            next: (updated) => {
+              this.editingTeacherId.set(null);
+              this.teachers.update((list) =>
+                list.map((t) => (t.id === teacher.id ? updated : t))
+              );
+              this.snackBar.open('Teacher updated.', 'Close', { duration: 3000 });
+            },
+            error: (err: HttpErrorResponse) => {
+              this.editingTeacherId.set(null);
+              this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+            }
+          });
+      });
+  }
+
   deleteTeacher(teacher: TeacherResponse): void {
     const data: ConfirmDialogData = {
       title: 'Delete teacher',
@@ -247,6 +280,43 @@ export class SchoolDashboardComponent implements OnInit {
             },
             error: (err: HttpErrorResponse) => {
               this.addingStudent.set(false);
+              this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+            }
+          });
+      });
+  }
+
+  editStudent(student: StudentResponse): void {
+    this.editingStudentId.set(student.id);
+    this.dialog
+      .open(StudentFormDialogComponent, {
+        data: {
+          initial: {
+            name: student.name,
+            email: student.email,
+            dateOfBirth: student.dateOfBirth
+          }
+        }
+      })
+      .afterClosed()
+      .subscribe((result: StudentFormDialogResult | undefined) => {
+        if (!result) {
+          this.editingStudentId.set(null);
+          return;
+        }
+
+        this.studentService
+          .updateStudent(student.id, { ...result, schoolId: this.schoolId })
+          .subscribe({
+            next: (updated) => {
+              this.editingStudentId.set(null);
+              this.students.update((list) =>
+                list.map((s) => (s.id === student.id ? updated : s))
+              );
+              this.snackBar.open('Student updated.', 'Close', { duration: 3000 });
+            },
+            error: (err: HttpErrorResponse) => {
+              this.editingStudentId.set(null);
               this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
             }
           });

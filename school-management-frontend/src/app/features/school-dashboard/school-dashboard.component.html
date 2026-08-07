@@ -118,15 +118,24 @@
               <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
               <span matListItemTitle>{{ teacher.name }}</span>
               <span matListItemLine>{{ teacher.email }}</span>
-              <button
-                mat-icon-button
-                matListItemMeta
-                color="warn"
-                aria-label="Delete teacher"
-                (click)="deleteTeacher(teacher)"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
+              <span matListItemMeta class="row-actions">
+                <button
+                  mat-icon-button
+                  [disabled]="editingTeacherId() === teacher.id"
+                  aria-label="Edit teacher"
+                  (click)="editTeacher(teacher)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  aria-label="Delete teacher"
+                  (click)="deleteTeacher(teacher)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </span>
             </mat-list-item>
           }
         </mat-list>
@@ -158,15 +167,24 @@
               <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
               <span matListItemTitle>{{ student.name }}</span>
               <span matListItemLine>{{ student.email }}</span>
-              <button
-                mat-icon-button
-                matListItemMeta
-                color="warn"
-                aria-label="Delete student"
-                (click)="deleteStudent(student)"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
+              <span matListItemMeta class="row-actions">
+                <button
+                  mat-icon-button
+                  [disabled]="editingStudentId() === student.id"
+                  aria-label="Edit student"
+                  (click)="editStudent(student)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  aria-label="Delete student"
+                  (click)="deleteStudent(student)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </span>
             </mat-list-item>
           }
         </mat-list>

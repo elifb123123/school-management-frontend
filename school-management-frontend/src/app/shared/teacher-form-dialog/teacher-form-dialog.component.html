@@ -1,6 +1,6 @@
 <div class="form-dialog">
   <div class="dialog-header">
-    <h2 mat-dialog-title>Add teacher</h2>
+    <h2 mat-dialog-title>{{ isEditMode ? 'Edit teacher' : 'Add teacher' }}</h2>
     <button mat-icon-button (click)="cancel()" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
@@ -30,6 +30,8 @@
 
   <mat-dialog-actions align="end">
     <button mat-button type="button" (click)="cancel()">Cancel</button>
-    <button mat-flat-button color="primary" type="submit" form="teacherDialogForm">Add</button>
+    <button mat-flat-button color="primary" type="submit" form="teacherDialogForm">
+      {{ isEditMode ? 'Save' : 'Add' }}
+    </button>
   </mat-dialog-actions>
 </div>
