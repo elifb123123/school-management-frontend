@@ -105,15 +105,30 @@
         </button>
       </div>
 
+      <div class="filter-bar">
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Search by name</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="teacherNameFilter" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Search by email</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="teacherEmailFilter" />
+        </mat-form-field>
+      </div>
+
       @if (loadingTeachers()) {
         <div class="loading-row">
           <mat-spinner diameter="32"></mat-spinner>
         </div>
       } @else if (teachers().length === 0) {
         <p class="empty-state">No teachers at this school yet.</p>
+      } @else if (filteredTeachers().length === 0) {
+        <p class="empty-state">No teachers match your search.</p>
       } @else {
         <mat-list>
-          @for (teacher of teachers(); track teacher.id) {
+          @for (teacher of filteredTeachers(); track teacher.id) {
             <mat-list-item class="clickable-row" (click)="viewTeacher(teacher)">
               <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
               <span matListItemTitle>{{ teacher.name }}</span>
@@ -154,15 +169,35 @@
         </button>
       </div>
 
+      <div class="filter-bar">
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Search by name</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="studentNameFilter" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Search by email</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="studentEmailFilter" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+          <mat-label>Search by student ID</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="studentIdFilter" />
+        </mat-form-field>
+      </div>
+
       @if (loadingStudents()) {
         <div class="loading-row">
           <mat-spinner diameter="32"></mat-spinner>
         </div>
       } @else if (students().length === 0) {
         <p class="empty-state">No students at this school yet.</p>
+      } @else if (filteredStudents().length === 0) {
+        <p class="empty-state">No students match your search.</p>
       } @else {
         <div class="custom-list">
-          @for (student of students(); track student.id) {
+          @for (student of filteredStudents(); track student.id) {
             <div class="custom-list-row clickable-row" (click)="viewStudent(student)">
               <span class="avatar">{{ student.name.charAt(0) }}</span>
               <div class="student-info">

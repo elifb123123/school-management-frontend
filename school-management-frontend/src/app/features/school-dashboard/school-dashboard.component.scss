@@ -113,6 +113,18 @@
   margin-bottom: var(--app-space-md);
 }
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--app-space-sm);
+  margin-bottom: var(--app-space-sm);
+}
+
+.filter-field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
 .section-header {
   display: flex;
   align-items: center;

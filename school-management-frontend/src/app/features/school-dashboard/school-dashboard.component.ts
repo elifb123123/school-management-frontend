@@ -1,4 +1,5 @@
-import { Component, OnInit, effect, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -91,6 +92,48 @@ export class SchoolDashboardComponent implements OnInit {
   protected readonly addingStudent = signal(false);
   protected readonly editingStudentId = signal<number | null>(null);
   private studentsLoaded = false;
+
+  protected readonly teacherNameFilter = new FormControl('', { nonNullable: true });
+  protected readonly teacherEmailFilter = new FormControl('', { nonNullable: true });
+  private readonly teacherNameFilterValue = toSignal(this.teacherNameFilter.valueChanges, {
+    initialValue: ''
+  });
+  private readonly teacherEmailFilterValue = toSignal(this.teacherEmailFilter.valueChanges, {
+    initialValue: ''
+  });
+
+  protected readonly filteredTeachers = computed(() => {
+    const name = this.teacherNameFilterValue().trim().toLowerCase();
+    const email = this.teacherEmailFilterValue().trim().toLowerCase();
+    return this.teachers().filter(
+      (t) => t.name.toLowerCase().includes(name) && t.email.toLowerCase().includes(email)
+    );
+  });
+
+  protected readonly studentNameFilter = new FormControl('', { nonNullable: true });
+  protected readonly studentEmailFilter = new FormControl('', { nonNullable: true });
+  protected readonly studentIdFilter = new FormControl('', { nonNullable: true });
+  private readonly studentNameFilterValue = toSignal(this.studentNameFilter.valueChanges, {
+    initialValue: ''
+  });
+  private readonly studentEmailFilterValue = toSignal(this.studentEmailFilter.valueChanges, {
+    initialValue: ''
+  });
+  private readonly studentIdFilterValue = toSignal(this.studentIdFilter.valueChanges, {
+    initialValue: ''
+  });
+
+  protected readonly filteredStudents = computed(() => {
+    const name = this.studentNameFilterValue().trim().toLowerCase();
+    const email = this.studentEmailFilterValue().trim().toLowerCase();
+    const id = this.studentIdFilterValue().trim();
+    return this.students().filter(
+      (s) =>
+        s.name.toLowerCase().includes(name) &&
+        s.email.toLowerCase().includes(email) &&
+        String(s.id).includes(id)
+    );
+  });
 
   // Reacts to the shell's top-right "Edit Profile" menu — a different
   // component reached via the toolbar, not a route change — asking this
