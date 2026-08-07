@@ -114,11 +114,11 @@
       } @else {
         <mat-list>
           @for (teacher of teachers(); track teacher.id) {
-            <mat-list-item>
+            <mat-list-item class="clickable-row" (click)="viewTeacher(teacher)">
               <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
               <span matListItemTitle>{{ teacher.name }}</span>
               <span matListItemLine>{{ teacher.email }}</span>
-              <span matListItemMeta class="row-actions">
+              <span matListItemMeta class="row-actions" (click)="$event.stopPropagation()">
                 <button
                   mat-icon-button
                   [disabled]="editingTeacherId() === teacher.id"

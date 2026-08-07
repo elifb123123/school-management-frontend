@@ -26,6 +26,14 @@ export const routes: Routes = [
         (m) => m.SchoolDashboardComponent
       )
   },
+  {
+    path: 'school/:schoolId/teachers/:teacherId',
+    canActivate: [schoolDashboardGuard],
+    loadComponent: () =>
+      import('./features/teacher-detail/teacher-detail.component').then(
+        (m) => m.TeacherDetailComponent
+      )
+  },
 
   // --- Legacy principal admin pages (scoped to their own school) — no longer
   // linked from the picker (superseded by /select-school + /school/:schoolId

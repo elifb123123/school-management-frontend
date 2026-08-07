@@ -1,5 +1,5 @@
 import { Component, OnInit, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -54,6 +54,7 @@ type DashboardTab = 'teachers' | 'students';
 })
 export class SchoolDashboardComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly schoolService = inject(SchoolService);
   private readonly sessionService = inject(SessionService);
   private readonly profileEditService = inject(ProfileEditService);
@@ -133,6 +134,10 @@ export class SchoolDashboardComponent implements OnInit {
     } else if (tab === 'students' && !this.studentsLoaded) {
       this.loadStudents();
     }
+  }
+
+  viewTeacher(teacher: TeacherResponse): void {
+    this.router.navigate(['/school', this.schoolId, 'teachers', teacher.id]);
   }
 
   private startEditingProfile(): void {
