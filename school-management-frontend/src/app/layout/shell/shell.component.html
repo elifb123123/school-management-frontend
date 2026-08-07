@@ -20,6 +20,17 @@
         <span class="user-role">{{ s.role }}</span>
       </span>
     </a>
+    @if (s.role === 'principal') {
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu" aria-label="Settings">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <mat-menu #settingsMenu="matMenu">
+        <button mat-menu-item type="button" (click)="editProfile()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit Profile</span>
+        </button>
+      </mat-menu>
+    }
     <button mat-icon-button (click)="switchRole()" aria-label="Switch role">
       <mat-icon>logout</mat-icon>
     </button>

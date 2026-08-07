@@ -11,8 +11,10 @@ import { filter, map } from 'rxjs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { SessionService } from '../../core/services/session.service';
+import { ProfileEditService } from '../../core/services/profile-edit.service';
 
 const NO_CHROME_ROUTES = new Set(['/', '/select-school']);
 
@@ -24,13 +26,15 @@ const NO_CHROME_ROUTES = new Set(['/', '/select-school']);
     RouterLinkActive,
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatMenuModule
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss'
 })
 export class ShellComponent {
   private readonly sessionService = inject(SessionService);
+  private readonly profileEditService = inject(ProfileEditService);
   private readonly router = inject(Router);
 
   protected readonly session = this.sessionService.session;
@@ -71,5 +75,12 @@ export class ShellComponent {
   switchRole(): void {
     this.sessionService.end();
     this.router.navigate(['/']);
+  }
+
+  editProfile(): void {
+    const session = this.session();
+    if (session) {
+      this.profileEditService.requestEdit(session.role);
+    }
   }
 }
