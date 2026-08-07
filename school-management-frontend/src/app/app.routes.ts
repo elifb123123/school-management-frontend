@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { sessionGuard } from './core/guards/session.guard';
+import { schoolDashboardGuard } from './core/guards/school-dashboard.guard';
 
 export const routes: Routes = [
   {
@@ -10,16 +11,43 @@ export const routes: Routes = [
         (m) => m.SessionPickerComponent
       )
   },
+  {
+    path: 'select-school',
+    loadComponent: () =>
+      import('./features/select-school/select-school.component').then(
+        (m) => m.SelectSchoolComponent
+      )
+  },
+  {
+    path: 'school/:schoolId',
+    canActivate: [schoolDashboardGuard],
+    loadComponent: () =>
+      import('./features/school-dashboard/school-dashboard.component').then(
+        (m) => m.SchoolDashboardComponent
+      )
+  },
 
-  // --- Principal (scoped to their own school) ---
+  // --- Legacy principal admin pages (scoped to their own school) — no longer
+  // linked from the picker (superseded by /select-school + /school/:schoolId
+  // above), but left in place rather than deleted since they're still working
+  // CRUD screens that a later step will likely fold back in. ---
   { path: 'principal', pathMatch: 'full', redirectTo: 'principal/school' },
   {
     path: 'principal/school',
     canActivate: [sessionGuard],
     data: { role: 'principal' },
     loadComponent: () =>
-      import('./features/schools/school-form/school-form.component').then(
-        (m) => m.SchoolFormComponent
+      import(
+        './features/principal/principal-school-profile/principal-school-profile.component'
+      ).then((m) => m.PrincipalSchoolProfileComponent)
+  },
+  {
+    path: 'principal/school/edit',
+    canActivate: [sessionGuard],
+    data: { role: 'principal' },
+    loadComponent: () =>
+      import('./features/principal/principal-school-edit/principal-school-edit.component').then(
+        (m) => m.PrincipalSchoolEditComponent
       )
   },
   {

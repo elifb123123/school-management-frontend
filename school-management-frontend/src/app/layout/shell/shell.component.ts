@@ -9,24 +9,12 @@ import {
 } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 import { SessionService } from '../../core/services/session.service';
 
-interface NavItem {
-  label: string;
-  path: string;
-  icon: string;
-}
-
-const PRINCIPAL_NAV: NavItem[] = [
-  { label: 'School', path: '/principal/school', icon: 'school' },
-  { label: 'Teachers', path: '/principal/teachers', icon: 'person' },
-  { label: 'Students', path: '/principal/students', icon: 'groups' }
-];
+const NO_CHROME_ROUTES = new Set(['/', '/select-school']);
 
 @Component({
   selector: 'app-shell',
@@ -35,8 +23,6 @@ const PRINCIPAL_NAV: NavItem[] = [
     RouterLink,
     RouterLinkActive,
     MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
     MatIconModule,
     MatButtonModule
   ],
@@ -50,10 +36,11 @@ export class ShellComponent {
   protected readonly session = this.sessionService.session;
 
   // Tracks the current URL reactively so chrome visibility can key off the
-  // route itself, not just session presence — the picker route must never
-  // show chrome even if a session is still active (e.g. browser back to '/'
-  // without ever clearing the session), and unlike a guard-based redirect
-  // this doesn't touch browser history at all, so back/forward stay native.
+  // route itself, not just session presence — the picker/select-school
+  // routes must never show chrome even if a session is still active (e.g.
+  // browser back without ever clearing the session), and unlike a
+  // guard-based redirect this doesn't touch browser history at all, so
+  // back/forward stay native.
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -63,23 +50,21 @@ export class ShellComponent {
   );
 
   protected readonly showChrome = computed(
-    () => this.session() !== null && this.currentUrl() !== '/'
-  );
-
-  protected readonly navItems = computed<NavItem[]>(() =>
-    this.session()?.role === 'principal' ? PRINCIPAL_NAV : []
+    () => this.session() !== null && !NO_CHROME_ROUTES.has(this.currentUrl())
   );
 
   protected readonly profileRoute = computed(() => {
-    switch (this.session()?.role) {
+    const session = this.session();
+    if (!session) {
+      return '/';
+    }
+    switch (session.role) {
       case 'principal':
-        return '/principal/school';
+        return `/school/${session.entityId}`;
       case 'teacher':
         return '/teacher';
       case 'student':
         return '/student';
-      default:
-        return '/';
     }
   });
 

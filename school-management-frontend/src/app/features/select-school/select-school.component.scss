@@ -1,0 +1,131 @@
+.picker-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 15% 10%, var(--mat-sys-primary-container) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, var(--mat-sys-tertiary-container) 0%, transparent 45%),
+    var(--mat-sys-surface-container-low);
+}
+
+.picker-shell {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--app-radius-lg);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  margin-bottom: 16px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 28px;
+}
+
+.list-card {
+  text-align: left;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--app-radius-md);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--mat-sys-surface-container);
+    outline: none;
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.result-name {
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.result-address {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: var(--mat-sys-outline);
+  flex-shrink: 0;
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.empty-state {
+  color: var(--mat-sys-on-surface-variant);
+  padding: 32px 0;
+  text-align: center;
+}

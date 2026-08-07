@@ -1,0 +1,100 @@
+@if (loadingProfile()) {
+  <div class="loading-row">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (school(); as s) {
+  <div class="surface-card profile-hero">
+    <div class="profile-hero-top">
+      <span class="profile-avatar-lg">
+        <mat-icon>school</mat-icon>
+      </span>
+      <div class="profile-heading">
+        <div class="profile-name-row">
+          <h1>{{ s.schoolName }}</h1>
+          <span class="role-badge">Your school</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <mat-icon>place</mat-icon>
+        <div>
+          <span class="detail-label">Address</span>
+          <span class="detail-value">{{ s.address }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>person</mat-icon>
+        <div>
+          <span class="detail-label">Teachers</span>
+          <span class="detail-value">{{ teacherCount() }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>groups</mat-icon>
+        <div>
+          <span class="detail-label">Students</span>
+          <span class="detail-value">{{ studentCount() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="surface-card profile-hero">
+    <p class="empty-state">{{ profileError() ?? 'No school information available.' }}</p>
+  </div>
+}
+
+<div class="tab-toggle-row">
+  <mat-button-toggle-group [value]="activeTab()" (change)="onTabChange($event)">
+    <mat-button-toggle value="teachers">
+      <mat-icon>person</mat-icon>
+      Teachers
+    </mat-button-toggle>
+    <mat-button-toggle value="students">
+      <mat-icon>groups</mat-icon>
+      Students
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div class="surface-card">
+  @if (activeTab() === 'teachers') {
+    @if (loadingTeachers()) {
+      <div class="loading-row">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    } @else if (teachers().length === 0) {
+      <p class="empty-state">No teachers at this school yet.</p>
+    } @else {
+      <mat-list>
+        @for (teacher of teachers(); track teacher.id) {
+          <mat-list-item>
+            <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
+            <span matListItemTitle>{{ teacher.name }}</span>
+            <span matListItemLine>{{ teacher.email }}</span>
+          </mat-list-item>
+        }
+      </mat-list>
+    }
+  } @else {
+    @if (loadingStudents()) {
+      <div class="loading-row">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    } @else if (students().length === 0) {
+      <p class="empty-state">No students at this school yet.</p>
+    } @else {
+      <mat-list>
+        @for (student of students(); track student.id) {
+          <mat-list-item>
+            <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
+            <span matListItemTitle>{{ student.name }}</span>
+            <span matListItemLine>{{ student.email }}</span>
+          </mat-list-item>
+        }
+      </mat-list>
+    }
+  }
+</div>

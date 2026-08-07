@@ -1,0 +1,49 @@
+<h1 class="page-title">School Information</h1>
+
+@if (loading()) {
+  <div class="loading-row">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (school(); as s) {
+  <div class="surface-card profile-hero">
+    <div class="profile-hero-top">
+      <span class="profile-avatar-lg">
+        <mat-icon>school</mat-icon>
+      </span>
+      <div class="profile-heading">
+        <div class="profile-name-row">
+          <h2>{{ s.schoolName }}</h2>
+          <span class="role-badge">Your school</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <mat-icon>place</mat-icon>
+        <div>
+          <span class="detail-label">Address</span>
+          <span class="detail-value">{{ s.address }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>person</mat-icon>
+        <div>
+          <span class="detail-label">Teachers</span>
+          <span class="detail-value">{{ teacherCount() }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>groups</mat-icon>
+        <div>
+          <span class="detail-label">Students</span>
+          <span class="detail-value">{{ studentCount() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="surface-card">
+    <p class="empty-state">{{ loadError() ?? 'No school information available.' }}</p>
+  </div>
+}

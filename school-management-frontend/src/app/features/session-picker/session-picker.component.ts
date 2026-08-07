@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { SchoolService } from '../../core/services/school.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { StudentService } from '../../core/services/student.service';
 import { SessionService, Role } from '../../core/services/session.service';
@@ -20,6 +19,8 @@ interface PickableEntity {
   id: number;
   label: string;
 }
+
+type PersonRole = Exclude<Role, 'principal'>;
 
 @Component({
   selector: 'app-session-picker',
@@ -35,19 +36,22 @@ interface PickableEntity {
   styleUrl: './session-picker.component.scss'
 })
 export class SessionPickerComponent {
-  private readonly schoolService = inject(SchoolService);
   private readonly teacherService = inject(TeacherService);
   private readonly studentService = inject(StudentService);
   private readonly sessionService = inject(SessionService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly role = signal<Role | null>(null);
+  protected readonly role = signal<PersonRole | null>(null);
   protected readonly entities = signal<PickableEntity[]>([]);
   protected readonly loading = signal(false);
   protected readonly selectedEntityId = new FormControl<number | null>(null);
 
-  chooseRole(role: Role): void {
+  goToSelectSchool(): void {
+    this.router.navigate(['/select-school']);
+  }
+
+  chooseRole(role: PersonRole): void {
     this.role.set(role);
     this.selectedEntityId.reset();
     this.loading.set(true);
@@ -57,15 +61,7 @@ export class SessionPickerComponent {
       this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
     };
 
-    if (role === 'principal') {
-      this.schoolService.getSchools({ page: 0, size: 100 }).subscribe({
-        next: (page) => {
-          this.entities.set(page.content.map((s) => ({ id: s.id, label: s.schoolName })));
-          this.loading.set(false);
-        },
-        error: onError
-      });
-    } else if (role === 'teacher') {
+    if (role === 'teacher') {
       this.teacherService.getTeachers({ page: 0, size: 100 }).subscribe({
         next: (page) => {
           this.entities.set(page.content.map((t) => ({ id: t.id, label: t.name })));

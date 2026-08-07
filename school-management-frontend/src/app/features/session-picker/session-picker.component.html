@@ -9,7 +9,7 @@
       <p class="subtitle">Continue as...</p>
 
       <div class="role-grid">
-        <button type="button" class="role-card" (click)="chooseRole('principal')">
+        <button type="button" class="role-card" (click)="goToSelectSchool()">
           <span class="role-icon"><mat-icon>admin_panel_settings</mat-icon></span>
           <span class="role-title">Principal</span>
           <span class="role-desc">Manage your school, teachers, and students</span>
@@ -28,13 +28,7 @@
     } @else {
       <div class="entity-card surface-card">
         <p class="subtitle">
-          {{
-            role() === 'principal'
-              ? 'Which school are you the principal of?'
-              : role() === 'teacher'
-                ? 'Which teacher are you?'
-                : 'Which student are you?'
-          }}
+          {{ role() === 'teacher' ? 'Which teacher are you?' : 'Which student are you?' }}
         </p>
 
         @if (loading()) {
