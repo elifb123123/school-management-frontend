@@ -1,0 +1,24 @@
+.form-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  max-width: 100%;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 0 24px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-sm);
+  padding-top: 8px;
+}

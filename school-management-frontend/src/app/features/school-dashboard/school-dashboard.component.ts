@@ -11,14 +11,29 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 import { SchoolService } from '../../core/services/school.service';
 import { SessionService } from '../../core/services/session.service';
 import { ProfileEditService } from '../../core/services/profile-edit.service';
+import { TeacherService } from '../../core/services/teacher.service';
+import { StudentService } from '../../core/services/student.service';
 import { SchoolResponse } from '../../core/models/school.model';
 import { TeacherResponse } from '../../core/models/teacher.model';
 import { StudentResponse } from '../../core/models/student.model';
 import { extractErrorMessage } from '../../core/utils/api-error';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData
+} from '../../shared/confirm-dialog/confirm-dialog.component';
+import {
+  TeacherFormDialogComponent,
+  TeacherFormDialogResult
+} from '../../shared/teacher-form-dialog/teacher-form-dialog.component';
+import {
+  StudentFormDialogComponent,
+  StudentFormDialogResult
+} from '../../shared/student-form-dialog/student-form-dialog.component';
 
 type DashboardTab = 'teachers' | 'students';
 
@@ -42,6 +57,9 @@ export class SchoolDashboardComponent implements OnInit {
   private readonly schoolService = inject(SchoolService);
   private readonly sessionService = inject(SessionService);
   private readonly profileEditService = inject(ProfileEditService);
+  private readonly teacherService = inject(TeacherService);
+  private readonly studentService = inject(StudentService);
+  private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly schoolId = Number(this.route.snapshot.paramMap.get('schoolId'));
@@ -63,10 +81,12 @@ export class SchoolDashboardComponent implements OnInit {
 
   protected readonly teachers = signal<TeacherResponse[]>([]);
   protected readonly loadingTeachers = signal(false);
+  protected readonly addingTeacher = signal(false);
   private teachersLoaded = false;
 
   protected readonly students = signal<StudentResponse[]>([]);
   protected readonly loadingStudents = signal(false);
+  protected readonly addingStudent = signal(false);
   private studentsLoaded = false;
 
   // Reacts to the shell's top-right "Edit Profile" menu — a different
@@ -148,6 +168,116 @@ export class SchoolDashboardComponent implements OnInit {
         this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
       }
     });
+  }
+
+  openAddTeacherDialog(): void {
+    this.dialog
+      .open(TeacherFormDialogComponent)
+      .afterClosed()
+      .subscribe((result: TeacherFormDialogResult | undefined) => {
+        if (!result) {
+          return;
+        }
+
+        this.addingTeacher.set(true);
+        this.teacherService
+          .createTeacher({ ...result, schoolId: this.schoolId })
+          .subscribe({
+            next: (created) => {
+              this.addingTeacher.set(false);
+              this.teachers.update((list) => [...list, created]);
+              this.teacherCount.update((count) => count + 1);
+              this.teachersLoaded = true;
+              this.snackBar.open('Teacher added.', 'Close', { duration: 3000 });
+            },
+            error: (err: HttpErrorResponse) => {
+              this.addingTeacher.set(false);
+              this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+            }
+          });
+      });
+  }
+
+  deleteTeacher(teacher: TeacherResponse): void {
+    const data: ConfirmDialogData = {
+      title: 'Delete teacher',
+      message: `Delete "${teacher.name}"? This cannot be undone.`
+    };
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((confirmed: boolean | undefined) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.teacherService.deleteTeacher(teacher.id).subscribe({
+          next: () => {
+            this.teachers.update((list) => list.filter((t) => t.id !== teacher.id));
+            this.teacherCount.update((count) => Math.max(0, count - 1));
+            this.snackBar.open('Teacher deleted.', 'Close', { duration: 3000 });
+          },
+          error: (err: HttpErrorResponse) => {
+            this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+          }
+        });
+      });
+  }
+
+  openAddStudentDialog(): void {
+    this.dialog
+      .open(StudentFormDialogComponent)
+      .afterClosed()
+      .subscribe((result: StudentFormDialogResult | undefined) => {
+        if (!result) {
+          return;
+        }
+
+        this.addingStudent.set(true);
+        this.studentService
+          .createStudent({ ...result, schoolId: this.schoolId })
+          .subscribe({
+            next: (created) => {
+              this.addingStudent.set(false);
+              this.students.update((list) => [...list, created]);
+              this.studentCount.update((count) => count + 1);
+              this.studentsLoaded = true;
+              this.snackBar.open('Student added.', 'Close', { duration: 3000 });
+            },
+            error: (err: HttpErrorResponse) => {
+              this.addingStudent.set(false);
+              this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+            }
+          });
+      });
+  }
+
+  deleteStudent(student: StudentResponse): void {
+    const data: ConfirmDialogData = {
+      title: 'Delete student',
+      message: `Delete "${student.name}"? This cannot be undone.`
+    };
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((confirmed: boolean | undefined) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.studentService.deleteStudent(student.id).subscribe({
+          next: () => {
+            this.students.update((list) => list.filter((s) => s.id !== student.id));
+            this.studentCount.update((count) => Math.max(0, count - 1));
+            this.snackBar.open('Student deleted.', 'Close', { duration: 3000 });
+          },
+          error: (err: HttpErrorResponse) => {
+            this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
+          }
+        });
+      });
   }
 
   private loadTeachers(): void {

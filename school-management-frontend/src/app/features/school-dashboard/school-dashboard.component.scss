@@ -113,6 +113,18 @@
   margin-bottom: var(--app-space-md);
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--app-space-md);
+  margin-bottom: var(--app-space-md);
+
+  h2 {
+    margin: 0;
+  }
+}
+
 .avatar {
   display: flex;
   align-items: center;
