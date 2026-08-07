@@ -16,6 +16,7 @@ import { SessionService } from '../../core/services/session.service';
 import { StudentResponse } from '../../core/models/student.model';
 import { TeacherResponse } from '../../core/models/teacher.model';
 import { extractErrorMessage } from '../../core/utils/api-error';
+import { formatBranch } from '../../core/utils/format-branch';
 import {
   PeoplePickerDialogComponent,
   PersonOption
@@ -42,6 +43,7 @@ export class StudentDashboardComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly studentId = this.sessionService.session()!.entityId;
+  protected readonly formatBranch = formatBranch;
 
   protected readonly profile = signal<StudentResponse | null>(null);
   protected readonly linkedTeachers = signal<TeacherResponse[]>([]);

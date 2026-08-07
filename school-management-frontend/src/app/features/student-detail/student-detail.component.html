@@ -87,6 +87,9 @@
           <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
           <span matListItemTitle>{{ teacher.name }}</span>
           <span matListItemLine>{{ teacher.email }}</span>
+          <span matListItemLine>
+            <span class="branch-badge">{{ formatBranch(teacher.branch) }}</span>
+          </span>
           <button
             mat-icon-button
             matListItemMeta

@@ -195,6 +195,32 @@
   text-transform: uppercase;
 }
 
+.avatar-sm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  background: transparent;
+}
+
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
 .custom-list {
   display: flex;
   flex-direction: column;

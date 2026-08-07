@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,7 +45,7 @@ type DashboardTab = 'teachers' | 'students';
   imports: [
     ReactiveFormsModule,
     MatIconModule,
-    MatListModule,
+    MatTableModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -90,6 +90,7 @@ export class SchoolDashboardComponent implements OnInit {
   protected readonly editingTeacherId = signal<number | null>(null);
   protected readonly branches = signal<string[]>([]);
   protected readonly formatBranch = formatBranch;
+  protected readonly teacherColumns = ['name', 'branch', 'email', 'actions'];
   private teachersLoaded = false;
 
   protected readonly students = signal<StudentResponse[]>([]);
