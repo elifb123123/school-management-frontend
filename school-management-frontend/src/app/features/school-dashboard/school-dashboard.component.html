@@ -161,13 +161,18 @@
       } @else if (students().length === 0) {
         <p class="empty-state">No students at this school yet.</p>
       } @else {
-        <mat-list>
+        <div class="custom-list">
           @for (student of students(); track student.id) {
-            <mat-list-item>
-              <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
-              <span matListItemTitle>{{ student.name }}</span>
-              <span matListItemLine>{{ student.email }}</span>
-              <span matListItemMeta class="row-actions">
+            <div class="custom-list-row clickable-row" (click)="viewStudent(student)">
+              <span class="avatar">{{ student.name.charAt(0) }}</span>
+              <div class="student-info">
+                <div class="student-name-row">
+                  <span class="student-name">{{ student.name }}</span>
+                  <span class="id-badge">ID #{{ student.id }}</span>
+                </div>
+                <span class="student-email">{{ student.email }}</span>
+              </div>
+              <span class="row-actions" (click)="$event.stopPropagation()">
                 <button
                   mat-icon-button
                   [disabled]="editingStudentId() === student.id"
@@ -185,9 +190,9 @@
                   <mat-icon>delete</mat-icon>
                 </button>
               </span>
-            </mat-list-item>
+            </div>
           }
-        </mat-list>
+        </div>
       }
     }
   </div>

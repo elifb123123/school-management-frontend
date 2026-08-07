@@ -33,7 +33,10 @@
           <button type="button" class="result-row" (click)="select(person)">
             <span class="avatar">{{ person.name.charAt(0) }}</span>
             <span class="result-info">
-              <span class="result-name">{{ person.name }}</span>
+              <span class="result-name-row">
+                <span class="result-name">{{ person.name }}</span>
+                <span class="id-badge">ID #{{ person.id }}</span>
+              </span>
               <span class="result-email">{{ person.email }}</span>
             </span>
             <mat-icon class="chevron">chevron_right</mat-icon>

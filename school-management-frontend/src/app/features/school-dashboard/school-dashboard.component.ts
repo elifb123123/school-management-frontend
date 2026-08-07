@@ -140,6 +140,10 @@ export class SchoolDashboardComponent implements OnInit {
     this.router.navigate(['/school', this.schoolId, 'teachers', teacher.id]);
   }
 
+  viewStudent(student: StudentResponse): void {
+    this.router.navigate(['/school', this.schoolId, 'students', student.id]);
+  }
+
   private startEditingProfile(): void {
     const current = this.school();
     if (!current) {

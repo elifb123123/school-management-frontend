@@ -1,3 +1,7 @@
+.detail-nav {
+  margin-bottom: var(--app-space-md);
+}
+
 .profile-hero {
   margin-bottom: var(--app-space-xl);
 }
@@ -14,6 +18,10 @@
 
 .profile-heading {
   min-width: 0;
+
+  h1 {
+    margin: 0;
+  }
 }
 
 .profile-avatar-lg {
@@ -26,12 +34,9 @@
   border-radius: 50%;
   background: linear-gradient(135deg, var(--mat-sys-primary-container), var(--mat-sys-tertiary-container));
   color: var(--mat-sys-on-primary-container);
-
-  mat-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
-  }
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .profile-name-row {
@@ -39,10 +44,6 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-
-  h1 {
-    margin: 0;
-  }
 }
 
 .role-badge {
@@ -54,6 +55,25 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.id-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.profile-email {
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 4px;
 }
 
 .profile-details {
@@ -88,31 +108,6 @@
   color: var(--mat-sys-on-surface);
 }
 
-.edit-title {
-  margin: 0 0 var(--app-space-lg);
-}
-
-.profile-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--app-space-sm);
-  max-width: 400px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--app-space-sm);
-  margin-top: var(--app-space-sm);
-  padding-top: var(--app-space-md);
-  border-top: 1px solid var(--mat-sys-outline-variant);
-}
-
-.tab-toggle-row {
-  display: flex;
-  margin-bottom: var(--app-space-md);
-}
-
 .section-header {
   display: flex;
   align-items: center;
@@ -125,102 +120,15 @@
   }
 }
 
-.id-badge {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--mat-sys-secondary-container);
-  color: var(--mat-sys-on-secondary-container);
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: 'Roboto Mono', ui-monospace, monospace;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.row-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.clickable-row {
-  cursor: pointer;
-  border-radius: var(--app-radius-md);
-
-  &:hover {
-    background: var(--mat-sys-surface-container);
-  }
-}
-
 .avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   font-weight: 600;
   text-transform: uppercase;
-}
-
-.custom-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.custom-list-row {
-  display: flex;
-  align-items: center;
-  gap: var(--app-space-md);
-  padding: 10px 12px;
-  border-radius: var(--app-radius-md);
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--mat-sys-outline-variant);
-  }
-
-  &:hover {
-    background: var(--mat-sys-surface-container);
-  }
-}
-
-.student-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.student-name-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.student-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface);
-}
-
-.student-email {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant);
 }
 
 .loading-row {

@@ -1,0 +1,108 @@
+<div class="detail-nav">
+  <a mat-button [routerLink]="backRoute">
+    <mat-icon>arrow_back</mat-icon>
+    Back to school dashboard
+  </a>
+</div>
+
+@if (loadingProfile()) {
+  <div class="loading-row">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (profile(); as p) {
+  <div class="surface-card profile-hero">
+    <div class="profile-hero-top">
+      <span class="profile-avatar-lg">{{ p.name.charAt(0) }}</span>
+      <div class="profile-heading">
+        <div class="profile-name-row">
+          <h1>{{ p.name }}</h1>
+          <span class="role-badge">Student</span>
+          <span class="id-badge">ID #{{ p.id }}</span>
+        </div>
+        <p class="profile-email">{{ p.email }}</p>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <mat-icon>school</mat-icon>
+        <div>
+          <span class="detail-label">School</span>
+          <span class="detail-value">{{ p.schoolName }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>cake</mat-icon>
+        <div>
+          <span class="detail-label">Date of birth</span>
+          <span class="detail-value">{{ p.dateOfBirth }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>badge</mat-icon>
+        <div>
+          <span class="detail-label">Age</span>
+          <span class="detail-value">{{ p.age }}</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <mat-icon>person</mat-icon>
+        <div>
+          <span class="detail-label">Linked teachers</span>
+          <span class="detail-value">{{ linkedTeachers().length }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="surface-card profile-hero">
+    <p class="empty-state">Student not found.</p>
+  </div>
+}
+
+<div class="surface-card">
+  <div class="section-header">
+    <h2>Linked teachers</h2>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="linking()"
+      (click)="openLinkTeacherDialog()"
+    >
+      <mat-icon>person_add</mat-icon>
+      Link teacher
+    </button>
+  </div>
+
+  @if (loadingTeachers()) {
+    <div class="loading-row">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else if (linkedTeachers().length === 0) {
+    <p class="empty-state">No teachers linked to this student yet.</p>
+  } @else {
+    <mat-list>
+      @for (teacher of linkedTeachers(); track teacher.id) {
+        <mat-list-item>
+          <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
+          <span matListItemTitle>{{ teacher.name }}</span>
+          <span matListItemLine>{{ teacher.email }}</span>
+          <button
+            mat-icon-button
+            matListItemMeta
+            [matMenuTriggerFor]="menu"
+            aria-label="More options"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="unlinkTeacher(teacher)">
+              <mat-icon>person_remove</mat-icon>
+              <span>Unassign Teacher</span>
+            </button>
+          </mat-menu>
+        </mat-list-item>
+      }
+    </mat-list>
+  }
+</div>
