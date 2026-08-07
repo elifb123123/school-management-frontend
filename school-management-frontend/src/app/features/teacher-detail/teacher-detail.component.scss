@@ -48,7 +48,7 @@
 
 .role-badge {
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--app-radius-sm);
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   font-size: 0.75rem;
@@ -61,7 +61,7 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--app-radius-sm);
   background: var(--mat-sys-tertiary-container);
   color: var(--mat-sys-on-tertiary-container);
   font-size: 0.75rem;
