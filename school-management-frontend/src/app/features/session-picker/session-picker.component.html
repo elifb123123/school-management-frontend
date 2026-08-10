@@ -1,0 +1,63 @@
+<div class="picker-page">
+  <div class="picker-shell">
+    <span class="brand-mark">
+      <mat-icon>school</mat-icon>
+    </span>
+    <h1>School Management</h1>
+
+    @if (role() === null) {
+      <p class="subtitle">Continue as...</p>
+
+      <div class="role-grid">
+        <button type="button" class="role-card" (click)="goToSelectSchool()">
+          <span class="role-icon"><mat-icon>admin_panel_settings</mat-icon></span>
+          <span class="role-title">Principal</span>
+          <span class="role-desc">Manage your school, teachers, and students</span>
+        </button>
+        <button type="button" class="role-card" (click)="chooseRole('teacher')">
+          <span class="role-icon"><mat-icon>person</mat-icon></span>
+          <span class="role-title">Teacher</span>
+          <span class="role-desc">View your profile and manage your students</span>
+        </button>
+        <button type="button" class="role-card" (click)="chooseRole('student')">
+          <span class="role-icon"><mat-icon>groups</mat-icon></span>
+          <span class="role-title">Student</span>
+          <span class="role-desc">View your profile and your teachers</span>
+        </button>
+      </div>
+    } @else {
+      <div class="entity-card surface-card">
+        <p class="subtitle">
+          {{ role() === 'teacher' ? 'Which teacher are you?' : 'Which student are you?' }}
+        </p>
+
+        @if (loading()) {
+          <div class="loading-row">
+            <mat-spinner diameter="32"></mat-spinner>
+          </div>
+        } @else {
+          <mat-form-field appearance="outline" class="entity-field">
+            <mat-label>Select</mat-label>
+            <mat-select [formControl]="selectedEntityId">
+              @for (entity of entities(); track entity.id) {
+                <mat-option [value]="entity.id">{{ entity.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div class="picker-actions">
+            <button mat-button (click)="back()">Back</button>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="selectedEntityId.value === null"
+              (click)="continue()"
+            >
+              Continue
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

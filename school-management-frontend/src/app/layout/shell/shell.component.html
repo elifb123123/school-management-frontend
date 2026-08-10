@@ -1,0 +1,46 @@
+@if (showChrome() && session(); as s) {
+  <mat-toolbar class="app-toolbar">
+    <div class="brand">
+      <span class="brand-mark">
+        <mat-icon>school</mat-icon>
+      </span>
+      <span class="brand-name">School Management</span>
+    </div>
+    <span class="spacer"></span>
+    <a
+      class="user-chip"
+      [routerLink]="profileRoute()"
+      routerLinkActive="user-chip--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      aria-label="View my profile"
+    >
+      <span class="user-avatar">{{ s.label.charAt(0) }}</span>
+      <span class="user-info">
+        <span class="user-name">{{ s.label }}</span>
+        <span class="user-role">{{ s.role }}</span>
+      </span>
+    </a>
+    @if (s.role === 'principal') {
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu" aria-label="Settings">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <mat-menu #settingsMenu="matMenu">
+        <button mat-menu-item type="button" (click)="editProfile()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit Profile</span>
+        </button>
+      </mat-menu>
+    }
+    <button mat-icon-button (click)="switchRole()" aria-label="Switch role">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="shell-content">
+    <div class="shell-content-inner">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}

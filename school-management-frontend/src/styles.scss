@@ -1,1 +1,126 @@
-/* You can add global styles to this file, and also import other style files */
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: -1,
+    )
+  );
+
+  // Material's default M3 shape scale is very rounded (buttons and chips use
+  // a fully pill-shaped "corner-full", cards/dialogs use 16-28px corners).
+  // That reads as casual/consumer-grade for an enterprise data-entry tool, so
+  // every corner role is tightened here — this cascades through every
+  // Material component (buttons, dialogs, menus, form fields, snackbars)
+  // since they all reference these system-level tokens rather than hardcoding
+  // their own radius.
+  --mat-sys-corner-extra-small: 4px;
+  --mat-sys-corner-small: 4px;
+  --mat-sys-corner-medium: 6px;
+  --mat-sys-corner-large: 8px;
+  --mat-sys-corner-large-end: 0 8px 8px 0;
+  --mat-sys-corner-large-start: 8px 0 0 8px;
+  --mat-sys-corner-large-top: 8px 8px 0 0;
+  --mat-sys-corner-extra-large: 12px;
+  --mat-sys-corner-extra-large-top: 12px 12px 0 0;
+  --mat-sys-corner-full: 6px;
+
+  // Design tokens shared across the app — a small, deliberate set rather than
+  // scattering magic numbers through every component's stylesheet.
+  --app-radius-sm: 4px;
+  --app-radius-md: 6px;
+  --app-radius-lg: 8px;
+  --app-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
+  --app-shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.07);
+  --app-space-xs: 4px;
+  --app-space-sm: 8px;
+  --app-space-md: 16px;
+  --app-space-lg: 20px;
+  --app-space-xl: 24px;
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // A soft, premium neutral tint behind every page, so the white surface
+  // cards read as elevated rather than blending into the page background.
+  background-color: #f8fafc;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+// Shared elevated-surface treatment for list/form/dashboard content — the one
+// visual "container" pattern reused across the whole app instead of every
+// feature redefining its own card shadow/radius/padding.
+.surface-card {
+  background: var(--mat-sys-surface);
+  border: 1px solid #e8eaf2;
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-card);
+  padding: var(--app-space-lg);
+}
+
+// Smooth, subtle motion on the interactive surfaces we add ourselves —
+// Material's own components already handle their own transitions.
+.surface-card,
+.mat-mdc-row,
+a.mat-mdc-list-item,
+.mat-mdc-list-item {
+  transition:
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.mat-mdc-table .mat-mdc-row:hover {
+  background-color: var(--mat-sys-surface-container-low);
+}

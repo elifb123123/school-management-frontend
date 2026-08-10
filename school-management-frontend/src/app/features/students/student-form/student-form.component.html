@@ -1,0 +1,68 @@
+<div class="form-page">
+  <h1>{{ isSelfScoped ? 'Edit my profile' : isEditMode() ? 'Edit student' : 'New student' }}</h1>
+
+  <div class="surface-card">
+    @if (loading()) {
+      <div class="loading-row">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="student-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+          @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+            <mat-error>Name is required.</mat-error>
+          } @else if (
+            (form.controls.name.hasError('minlength') ||
+              form.controls.name.hasError('maxlength')) &&
+            form.controls.name.touched
+          ) {
+            <mat-error>Name must be between 3 and 20 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+            <mat-error>Email is required.</mat-error>
+          } @else if (form.controls.email.hasError('email') && form.controls.email.touched) {
+            <mat-error>Enter a valid email address.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date of birth</mat-label>
+          <input matInput formControlName="dateOfBirth" type="date" />
+          @if (
+            form.controls.dateOfBirth.hasError('required') && form.controls.dateOfBirth.touched
+          ) {
+            <mat-error>Date of birth is required.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (!hideSchoolField) {
+          <mat-form-field appearance="outline">
+            <mat-label>School</mat-label>
+            <mat-select formControlName="schoolId">
+              @for (school of schools(); track school.id) {
+                <mat-option [value]="school.id">{{ school.schoolName }}</mat-option>
+              }
+            </mat-select>
+            @if (form.controls.schoolId.hasError('required') && form.controls.schoolId.touched) {
+              <mat-error>School is required.</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
