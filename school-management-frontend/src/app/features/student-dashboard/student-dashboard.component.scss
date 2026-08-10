@@ -8,7 +8,6 @@
   gap: var(--app-space-lg);
   padding-bottom: var(--app-space-lg);
   margin-bottom: var(--app-space-lg);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
   flex-wrap: wrap;
 }
 
@@ -45,8 +44,8 @@
 .role-badge {
   padding: 4px 12px;
   border-radius: var(--app-radius-sm);
-  background: var(--mat-sys-primary-container);
-  color: var(--mat-sys-on-primary-container);
+  background: #eff6ff;
+  color: #1d4ed8;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -58,8 +57,8 @@
   align-items: center;
   padding: 1px 9px;
   border-radius: var(--app-radius-sm);
-  background: var(--mat-sys-tertiary-container);
-  color: var(--mat-sys-on-tertiary-container);
+  background: #f0fdfa;
+  color: #0f766e;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -85,6 +84,9 @@
   mat-icon {
     color: var(--mat-sys-on-surface-variant);
     margin-top: 2px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -119,11 +121,62 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.linked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.linked-row {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-md);
+  padding: 10px 12px;
+  border-radius: var(--app-radius-md);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+
+  > button {
+    margin-left: auto;
+  }
+}
+
+.linked-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 0 1 260px;
+}
+
+.linked-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.linked-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .loading-row {

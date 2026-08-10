@@ -40,8 +40,8 @@ html {
   --app-radius-sm: 4px;
   --app-radius-md: 6px;
   --app-radius-lg: 8px;
-  --app-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --app-shadow-card-hover: 0 1px 3px rgba(15, 23, 42, 0.1);
+  --app-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
+  --app-shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.07);
   --app-space-xs: 4px;
   --app-space-sm: 8px;
   --app-space-md: 16px;
@@ -55,9 +55,9 @@ body {
   // user's system settings.
   color-scheme: light;
 
-  // A faint tint behind every page, so the white/near-white surface cards
-  // read as elevated rather than blending into the page background.
-  background-color: var(--mat-sys-surface-container-low);
+  // A soft, premium neutral tint behind every page, so the white surface
+  // cards read as elevated rather than blending into the page background.
+  background-color: #f8fafc;
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
 
@@ -79,10 +79,10 @@ h3 {
 }
 
 h1 {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 h2 {
@@ -104,7 +104,7 @@ a {
 // feature redefining its own card shadow/radius/padding.
 .surface-card {
   background: var(--mat-sys-surface);
-  border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid #e8eaf2;
   border-radius: var(--app-radius-lg);
   box-shadow: var(--app-shadow-card);
   padding: var(--app-space-lg);

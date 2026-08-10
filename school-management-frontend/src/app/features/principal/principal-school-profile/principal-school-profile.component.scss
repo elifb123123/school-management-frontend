@@ -12,7 +12,6 @@
   gap: var(--app-space-lg);
   padding-bottom: var(--app-space-lg);
   margin-bottom: var(--app-space-lg);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
   flex-wrap: wrap;
 }
 
@@ -56,8 +55,8 @@
 .role-badge {
   padding: 4px 12px;
   border-radius: var(--app-radius-sm);
-  background: var(--mat-sys-primary-container);
-  color: var(--mat-sys-on-primary-container);
+  background: #eff6ff;
+  color: #1d4ed8;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -78,6 +77,9 @@
   mat-icon {
     color: var(--mat-sys-on-surface-variant);
     margin-top: 2px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 

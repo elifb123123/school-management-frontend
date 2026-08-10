@@ -70,21 +70,16 @@
   } @else if (linkedTeachers().length === 0) {
     <p class="empty-state">No teachers linked yet.</p>
   } @else {
-    <mat-list>
+    <div class="linked-list">
       @for (teacher of linkedTeachers(); track teacher.id) {
-        <mat-list-item>
-          <span matListItemAvatar class="avatar">{{ teacher.name.charAt(0) }}</span>
-          <span matListItemTitle>{{ teacher.name }}</span>
-          <span matListItemLine>{{ teacher.email }}</span>
-          <span matListItemLine>
-            <span class="branch-badge">{{ formatBranch(teacher.branch) }}</span>
-          </span>
-          <button
-            mat-icon-button
-            matListItemMeta
-            [matMenuTriggerFor]="menu"
-            aria-label="More options"
-          >
+        <div class="linked-row">
+          <span class="avatar">{{ teacher.name.charAt(0) }}</span>
+          <div class="linked-info">
+            <span class="linked-name">{{ teacher.name }}</span>
+            <span class="linked-email">{{ teacher.email }}</span>
+          </div>
+          <span class="branch-badge">{{ formatBranch(teacher.branch) }}</span>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More options">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -93,8 +88,8 @@
               <span>Unassign Teacher</span>
             </button>
           </mat-menu>
-        </mat-list-item>
+        </div>
       }
-    </mat-list>
+    </div>
   }
 </div>

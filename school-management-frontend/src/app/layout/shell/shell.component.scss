@@ -43,8 +43,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 12px 6px 6px;
-  border-radius: var(--app-radius-sm);
+  padding: 6px 14px 6px 6px;
+  border-radius: var(--app-radius-md);
   text-decoration: none;
   color: inherit;
   margin-right: 4px;
@@ -73,12 +73,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
   flex-shrink: 0;
@@ -87,11 +87,12 @@
 .user-info {
   display: flex;
   flex-direction: column;
+  gap: 2px;
   line-height: 1.2;
 }
 
 .user-name {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--mat-sys-on-surface);
 }
@@ -105,7 +106,7 @@
 .shell-content {
   height: calc(100vh - 64px);
   overflow: auto;
-  background: var(--mat-sys-surface-container-low);
+  background: #f8fafc;
 }
 
 .shell-content-inner {

@@ -90,7 +90,7 @@ export class SchoolDashboardComponent implements OnInit {
   protected readonly editingTeacherId = signal<number | null>(null);
   protected readonly branches = signal<string[]>([]);
   protected readonly formatBranch = formatBranch;
-  protected readonly teacherColumns = ['name', 'branch', 'email', 'actions'];
+  protected readonly teacherColumns = ['name', 'branch', 'actions'];
   private teachersLoaded = false;
 
   protected readonly students = signal<StudentResponse[]>([]);
