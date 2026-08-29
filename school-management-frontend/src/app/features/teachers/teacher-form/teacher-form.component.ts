@@ -54,7 +54,8 @@ export class TeacherFormComponent implements OnInit {
       validators: [Validators.required, Validators.email]
     }),
     branch: new FormControl('', { nonNullable: true, validators: Validators.required }),
-    schoolId: new FormControl<number | null>(null, { validators: Validators.required })
+    schoolId: new FormControl<number | null>(null, { validators: Validators.required }),
+    password: new FormControl('', { nonNullable: true })
   });
 
   protected readonly schools = signal<SchoolResponse[]>([]);
@@ -69,6 +70,10 @@ export class TeacherFormComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
+
+    if (!idParam) {
+      this.form.controls.password.setValidators([Validators.required, Validators.minLength(6)]);
+    }
 
     this.teacherService.getBranches().subscribe({
       next: (branches) => this.branches.set(branches),
@@ -87,24 +92,14 @@ export class TeacherFormComponent implements OnInit {
     }
 
     if (this.isSelfScoped) {
-      // A teacher always edits themselves — never creates, never picks an id. Unlike the
-      // principal scope, a teacher's identity isn't the school, so the current schoolId
-      // still needs resolving via the schools list (same as the legacy path below).
-      this.schoolService.getSchools({ page: 0, size: 100 }).subscribe({
-        next: (page) => {
-          this.schools.set(page.content);
-          this.loadTeacher(this.sessionService.session()!.entityId);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.loading.set(false);
-          this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 });
-        }
-      });
+      // A teacher always edits themselves — never creates, never picks an id — and the
+      // school field is hidden here, so there's no dropdown to populate.
+      this.loadTeacher(this.sessionService.session()!.entityId);
       return;
     }
 
-    // TeacherResponse only exposes schoolName, not schoolId, so the schools list must be
-    // loaded before an existing teacher's school selection can be resolved and pre-filled.
+    // The legacy unscoped path shows a school dropdown, so the schools list is loaded
+    // to populate it (independent of the teacher being edited, if any).
     this.schoolService.getSchools({ page: 0, size: 100 }).subscribe({
       next: (page) => {
         this.schools.set(page.content);
@@ -130,7 +125,7 @@ export class TeacherFormComponent implements OnInit {
       next: (teacher) => {
         const schoolId = this.isPrincipalScoped
           ? this.sessionService.session()!.entityId
-          : (this.schools().find((s) => s.schoolName === teacher.schoolName)?.id ?? null);
+          : teacher.schoolId;
         this.form.patchValue({
           name: teacher.name,
           email: teacher.email,
@@ -155,16 +150,19 @@ export class TeacherFormComponent implements OnInit {
 
     this.saving.set(true);
     const raw = this.form.getRawValue();
-    const request = {
-      name: raw.name,
-      email: raw.email,
-      branch: raw.branch,
-      schoolId: raw.schoolId!
-    };
+
     const result =
       this.isEditMode() && this.teacherId !== null
-        ? this.teacherService.updateTeacher(this.teacherId, request)
-        : this.teacherService.createTeacher(request);
+        ? this.teacherService.updateTeacher(this.teacherId, {
+            name: raw.name,
+            email: raw.email,
+            branch: raw.branch,
+            schoolId: raw.schoolId!
+          })
+        : this.teacherService.registerTeacher({
+            userRequest: { name: raw.name, email: raw.email, password: raw.password },
+            teacherRequest: { branch: raw.branch, schoolId: raw.schoolId! }
+          });
 
     result.subscribe({
       next: () => {

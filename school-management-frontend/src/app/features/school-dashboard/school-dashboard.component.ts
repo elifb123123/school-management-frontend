@@ -255,13 +255,15 @@ export class SchoolDashboardComponent implements OnInit {
 
         this.addingTeacher.set(true);
         this.teacherService
-          .createTeacher({ ...result, schoolId: this.schoolId })
+          .registerTeacher({
+            userRequest: { name: result.name, email: result.email, password: result.password! },
+            teacherRequest: { branch: result.branch, schoolId: this.schoolId }
+          })
           .subscribe({
-            next: (created) => {
+            next: () => {
               this.addingTeacher.set(false);
-              this.teachers.update((list) => [...list, created]);
               this.teacherCount.update((count) => count + 1);
-              this.teachersLoaded = true;
+              this.loadTeachers();
               this.snackBar.open('Teacher added.', 'Close', { duration: 3000 });
             },
             error: (err: HttpErrorResponse) => {
@@ -344,13 +346,15 @@ export class SchoolDashboardComponent implements OnInit {
 
         this.addingStudent.set(true);
         this.studentService
-          .createStudent({ ...result, schoolId: this.schoolId })
+          .registerStudent({
+            userRequest: { name: result.name, email: result.email, password: result.password! },
+            studentRequest: { dateOfBirth: result.dateOfBirth, schoolId: this.schoolId }
+          })
           .subscribe({
-            next: (created) => {
+            next: () => {
               this.addingStudent.set(false);
-              this.students.update((list) => [...list, created]);
               this.studentCount.update((count) => count + 1);
-              this.studentsLoaded = true;
+              this.loadStudents();
               this.snackBar.open('Student added.', 'Close', { duration: 3000 });
             },
             error: (err: HttpErrorResponse) => {

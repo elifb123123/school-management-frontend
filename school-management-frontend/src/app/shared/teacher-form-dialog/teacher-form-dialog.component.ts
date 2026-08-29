@@ -14,6 +14,7 @@ export interface TeacherFormDialogResult {
   name: string;
   email: string;
   branch: string;
+  password?: string;
 }
 
 export interface TeacherFormDialogData {
@@ -54,6 +55,10 @@ export class TeacherFormDialogComponent {
     branch: new FormControl(this.data.initial?.branch ?? '', {
       nonNullable: true,
       validators: Validators.required
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]
     })
   });
 
@@ -62,7 +67,11 @@ export class TeacherFormDialogComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.form.getRawValue());
+    const raw = this.form.getRawValue();
+    const result: TeacherFormDialogResult = this.isEditMode
+      ? { name: raw.name, email: raw.email, branch: raw.branch }
+      : { name: raw.name, email: raw.email, branch: raw.branch, password: raw.password };
+    this.dialogRef.close(result);
   }
 
   cancel(): void {

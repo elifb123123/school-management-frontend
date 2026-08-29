@@ -21,7 +21,7 @@
         <mat-icon>school</mat-icon>
         <div>
           <span class="detail-label">School</span>
-          <span class="detail-value">{{ p.schoolName }}</span>
+          <span class="detail-value">{{ schoolName() }}</span>
         </div>
       </div>
       <div class="detail-item">
@@ -38,15 +38,6 @@
 <div class="surface-card">
   <div class="section-header">
     <h2>My students</h2>
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="linking()"
-      (click)="openAddStudentDialog()"
-    >
-      <mat-icon>person_add</mat-icon>
-      Add student
-    </button>
   </div>
 
   @if (loading()) {
@@ -54,7 +45,7 @@
       <mat-spinner diameter="32"></mat-spinner>
     </div>
   } @else if (linkedStudents().length === 0) {
-    <p class="empty-state">No students linked yet.</p>
+    <p class="empty-state">No students linked yet. Ask your school's principal to link one.</p>
   } @else {
     <mat-list>
       @for (student of linkedStudents(); track student.id) {
@@ -62,20 +53,6 @@
           <span matListItemAvatar class="avatar">{{ student.name.charAt(0) }}</span>
           <span matListItemTitle>{{ student.name }}</span>
           <span matListItemLine>{{ student.email }}</span>
-          <button
-            mat-icon-button
-            matListItemMeta
-            [matMenuTriggerFor]="menu"
-            aria-label="More options"
-          >
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="unlinkStudent(student)">
-              <mat-icon>person_remove</mat-icon>
-              <span>Unassign Student</span>
-            </button>
-          </mat-menu>
         </mat-list-item>
       }
     </mat-list>

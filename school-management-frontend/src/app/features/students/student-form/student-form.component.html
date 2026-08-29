@@ -42,6 +42,20 @@
           }
         </mat-form-field>
 
+        @if (!isEditMode()) {
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" autocomplete="new-password" />
+            @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+              <mat-error>Password is required.</mat-error>
+            } @else if (
+              form.controls.password.hasError('minlength') && form.controls.password.touched
+            ) {
+              <mat-error>Password must be at least 6 characters.</mat-error>
+            }
+          </mat-form-field>
+        }
+
         @if (!hideSchoolField) {
           <mat-form-field appearance="outline">
             <mat-label>School</mat-label>
