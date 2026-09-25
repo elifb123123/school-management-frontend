@@ -71,7 +71,7 @@ export class TeacherFormComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
 
-    if (!idParam) {
+    if (!idParam && !this.isSelfScoped) {
       this.form.controls.password.setValidators([Validators.required, Validators.minLength(6)]);
     }
 
@@ -154,10 +154,8 @@ export class TeacherFormComponent implements OnInit {
     const result =
       this.isEditMode() && this.teacherId !== null
         ? this.teacherService.updateTeacher(this.teacherId, {
-            name: raw.name,
-            email: raw.email,
-            branch: raw.branch,
-            schoolId: raw.schoolId!
+            userRequest: { name: raw.name, email: raw.email },
+            teacherRequest: { branch: raw.branch, schoolId: raw.schoolId! }
           })
         : this.teacherService.registerTeacher({
             userRequest: { name: raw.name, email: raw.email, password: raw.password },

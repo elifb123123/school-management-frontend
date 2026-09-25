@@ -291,7 +291,10 @@ export class SchoolDashboardComponent implements OnInit {
         }
 
         this.teacherService
-          .updateTeacher(teacher.id, { ...result, schoolId: this.schoolId })
+          .updateTeacher(teacher.id, {
+            userRequest: { name: result.name, email: result.email },
+            teacherRequest: { branch: result.branch, schoolId: this.schoolId }
+          })
           .subscribe({
             next: (updated) => {
               this.editingTeacherId.set(null);
@@ -385,7 +388,10 @@ export class SchoolDashboardComponent implements OnInit {
         }
 
         this.studentService
-          .updateStudent(student.id, { ...result, schoolId: this.schoolId })
+          .updateStudent(student.id, {
+            userRequest: { name: result.name, email: result.email },
+            studentRequest: { dateOfBirth: result.dateOfBirth, schoolId: this.schoolId }
+          })
           .subscribe({
             next: (updated) => {
               this.editingStudentId.set(null);

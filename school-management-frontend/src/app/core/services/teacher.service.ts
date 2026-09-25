@@ -6,8 +6,8 @@ import { API_BASE_URL } from '../api-config';
 import { Page } from '../models/page.model';
 import {
   TeacherRegistrationRequest,
-  TeacherRequest,
-  TeacherResponse
+  TeacherResponse,
+  TeacherUpdateRequest
 } from '../models/teacher.model';
 import { StudentResponse } from '../models/student.model';
 import { UserResponse } from '../models/user.model';
@@ -43,7 +43,7 @@ export class TeacherService {
     return this.http.post<UserResponse>(`${API_BASE_URL}/api/register/teacher`, request);
   }
 
-  updateTeacher(id: number, request: TeacherRequest): Observable<TeacherResponse> {
+  updateTeacher(id: number, request: TeacherUpdateRequest): Observable<TeacherResponse> {
     return this.http.put<TeacherResponse>(`${this.baseUrl}/${id}`, request);
   }
 

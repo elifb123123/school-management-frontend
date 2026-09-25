@@ -6,8 +6,8 @@ import { API_BASE_URL } from '../api-config';
 import { Page } from '../models/page.model';
 import {
   StudentRegistrationRequest,
-  StudentRequest,
-  StudentResponse
+  StudentResponse,
+  StudentUpdateRequest
 } from '../models/student.model';
 import { TeacherResponse } from '../models/teacher.model';
 import { UserResponse } from '../models/user.model';
@@ -47,7 +47,7 @@ export class StudentService {
     return this.http.post<UserResponse>(`${API_BASE_URL}/api/register/student`, request);
   }
 
-  updateStudent(id: number, request: StudentRequest): Observable<StudentResponse> {
+  updateStudent(id: number, request: StudentUpdateRequest): Observable<StudentResponse> {
     return this.http.put<StudentResponse>(`${this.baseUrl}/${id}`, request);
   }
 

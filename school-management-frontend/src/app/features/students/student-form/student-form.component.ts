@@ -71,7 +71,7 @@ export class StudentFormComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.loading.set(true);
 
-    if (!idParam) {
+    if (!idParam && !this.isSelfScoped) {
       this.form.controls.password.setValidators([Validators.required, Validators.minLength(6)]);
     }
 
@@ -148,10 +148,8 @@ export class StudentFormComponent implements OnInit {
     const result =
       this.isEditMode() && this.studentId !== null
         ? this.studentService.updateStudent(this.studentId, {
-            name: raw.name,
-            email: raw.email,
-            dateOfBirth: raw.dateOfBirth,
-            schoolId: raw.schoolId!
+            userRequest: { name: raw.name, email: raw.email },
+            studentRequest: { dateOfBirth: raw.dateOfBirth, schoolId: raw.schoolId! }
           })
         : this.studentService.registerStudent({
             userRequest: { name: raw.name, email: raw.email, password: raw.password },
