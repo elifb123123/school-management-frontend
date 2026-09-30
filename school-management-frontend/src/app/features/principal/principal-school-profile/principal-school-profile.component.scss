@@ -1,0 +1,111 @@
+.page-title {
+  margin-bottom: var(--app-space-lg);
+}
+
+.profile-hero {
+  margin-bottom: var(--app-space-xl);
+}
+
+.profile-hero-top {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-lg);
+  padding-bottom: var(--app-space-lg);
+  margin-bottom: var(--app-space-lg);
+  flex-wrap: wrap;
+}
+
+.profile-heading {
+  min-width: 0;
+}
+
+.profile-avatar-lg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--mat-sys-primary-container), var(--mat-sys-tertiary-container));
+  color: var(--mat-sys-on-primary-container);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: var(--app-radius-sm);
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--app-space-md);
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  mat-icon {
+    color: var(--mat-sys-on-surface-variant);
+    margin-top: 2px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.detail-value {
+  display: block;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.empty-state {
+  color: var(--mat-sys-on-surface-variant);
+  padding: 48px 0;
+  text-align: center;
+}
