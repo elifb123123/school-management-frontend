@@ -12,10 +12,14 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'select-school',
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent)
+  },
+  {
+    path: 'register/principal',
     loadComponent: () =>
-      import('./features/select-school/select-school.component').then(
-        (m) => m.SelectSchoolComponent
+      import('./features/auth/register-principal/register-principal.component').then(
+        (m) => m.RegisterPrincipalComponent
       )
   },
   {
@@ -44,9 +48,9 @@ export const routes: Routes = [
   },
 
   // --- Legacy principal admin pages (scoped to their own school) — no longer
-  // linked from the picker (superseded by /select-school + /school/:schoolId
-  // above), but left in place rather than deleted since they're still working
-  // CRUD screens that a later step will likely fold back in. ---
+  // linked from the picker (superseded by /login + /school/:schoolId above),
+  // but left in place rather than deleted since they're still working CRUD
+  // screens that a later step will likely fold back in. ---
   { path: 'principal', pathMatch: 'full', redirectTo: 'principal/school' },
   {
     path: 'principal/school',

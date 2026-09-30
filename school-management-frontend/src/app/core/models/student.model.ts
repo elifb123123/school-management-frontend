@@ -1,8 +1,22 @@
-export interface StudentRequest {
-  name: string;
-  email: string;
-  dateOfBirth: string;
-  schoolId: number;
+import { UserRequest } from './auth.model';
+
+export interface StudentRegistrationRequest {
+  userRequest: UserRequest;
+  studentRequest: {
+    dateOfBirth: string;
+    schoolId: number;
+  };
+}
+
+export interface StudentUpdateRequest {
+  userRequest: {
+    name: string;
+    email: string;
+  };
+  studentRequest: {
+    dateOfBirth: string;
+    schoolId: number;
+  };
 }
 
 export interface StudentResponse {
@@ -11,5 +25,5 @@ export interface StudentResponse {
   email: string;
   dateOfBirth: string;
   age: number;
-  schoolName: string;
+  schoolId: number;
 }

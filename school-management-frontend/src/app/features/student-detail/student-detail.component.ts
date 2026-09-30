@@ -47,6 +47,7 @@ export class StudentDetailComponent implements OnInit {
   protected readonly formatBranch = formatBranch;
 
   protected readonly profile = signal<StudentResponse | null>(null);
+  protected readonly schoolName = signal('');
   protected readonly linkedTeachers = signal<TeacherResponse[]>([]);
   protected readonly allTeachers = signal<TeacherResponse[]>([]);
   protected readonly loadingProfile = signal(true);
@@ -72,6 +73,12 @@ export class StudentDetailComponent implements OnInit {
 
     this.schoolService.getTeachersBySchool(this.schoolId, { page: 0, size: 100 }).subscribe({
       next: (page) => this.allTeachers.set(page.content),
+      error: (err: HttpErrorResponse) =>
+        this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 })
+    });
+
+    this.schoolService.getSchool(this.schoolId).subscribe({
+      next: (school) => this.schoolName.set(school.schoolName),
       error: (err: HttpErrorResponse) =>
         this.snackBar.open(extractErrorMessage(err), 'Close', { duration: 5000 })
     });

@@ -15,8 +15,9 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { SessionService } from '../../core/services/session.service';
 import { ProfileEditService } from '../../core/services/profile-edit.service';
+import { AuthService } from '../../core/services/auth.service';
 
-const NO_CHROME_ROUTES = new Set(['/', '/select-school']);
+const NO_CHROME_ROUTES = new Set(['/', '/login', '/register/principal']);
 
 @Component({
   selector: 'app-shell',
@@ -35,12 +36,13 @@ const NO_CHROME_ROUTES = new Set(['/', '/select-school']);
 export class ShellComponent {
   private readonly sessionService = inject(SessionService);
   private readonly profileEditService = inject(ProfileEditService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   protected readonly session = this.sessionService.session;
 
   // Tracks the current URL reactively so chrome visibility can key off the
-  // route itself, not just session presence — the picker/select-school
+  // route itself, not just session presence — the picker/login/register
   // routes must never show chrome even if a session is still active (e.g.
   // browser back without ever clearing the session), and unlike a
   // guard-based redirect this doesn't touch browser history at all, so
@@ -73,7 +75,7 @@ export class ShellComponent {
   });
 
   switchRole(): void {
-    this.sessionService.end();
+    this.authService.logout();
     this.router.navigate(['/']);
   }
 

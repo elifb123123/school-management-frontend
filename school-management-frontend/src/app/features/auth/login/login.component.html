@@ -1,0 +1,39 @@
+<div class="picker-page">
+  <div class="picker-shell">
+    <span class="brand-mark">
+      <mat-icon>school</mat-icon>
+    </span>
+    <h1>Sign in</h1>
+    <p class="subtitle">Log in with the email and password you were given.</p>
+
+    <div class="surface-card auth-card">
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" autocomplete="email" />
+          @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+            <mat-error>Email is required.</mat-error>
+          } @else if (form.controls.email.hasError('email') && form.controls.email.touched) {
+            <mat-error>Enter a valid email address.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" autocomplete="current-password" />
+          @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+            <mat-error>Password is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Signing in...' : 'Sign in' }}
+        </button>
+      </form>
+
+      <p class="auth-footer">
+        New school? <a routerLink="/register/principal">Register as principal</a>
+      </p>
+    </div>
+  </div>
+</div>

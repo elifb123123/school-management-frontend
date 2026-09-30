@@ -4,8 +4,13 @@ import { Observable } from 'rxjs';
 
 import { API_BASE_URL } from '../api-config';
 import { Page } from '../models/page.model';
-import { TeacherRequest, TeacherResponse } from '../models/teacher.model';
+import {
+  TeacherRegistrationRequest,
+  TeacherResponse,
+  TeacherUpdateRequest
+} from '../models/teacher.model';
 import { StudentResponse } from '../models/student.model';
+import { UserResponse } from '../models/user.model';
 
 export interface TeacherListParams {
   page: number;
@@ -34,11 +39,11 @@ export class TeacherService {
     return this.http.get<string[]>(`${this.baseUrl}/branches`);
   }
 
-  createTeacher(request: TeacherRequest): Observable<TeacherResponse> {
-    return this.http.post<TeacherResponse>(this.baseUrl, request);
+  registerTeacher(request: TeacherRegistrationRequest): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${API_BASE_URL}/api/register/teacher`, request);
   }
 
-  updateTeacher(id: number, request: TeacherRequest): Observable<TeacherResponse> {
+  updateTeacher(id: number, request: TeacherUpdateRequest): Observable<TeacherResponse> {
     return this.http.put<TeacherResponse>(`${this.baseUrl}/${id}`, request);
   }
 

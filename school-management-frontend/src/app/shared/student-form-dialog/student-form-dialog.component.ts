@@ -11,6 +11,7 @@ export interface StudentFormDialogResult {
   name: string;
   email: string;
   dateOfBirth: string;
+  password?: string;
 }
 
 export interface StudentFormDialogData {
@@ -50,6 +51,10 @@ export class StudentFormDialogComponent {
     dateOfBirth: new FormControl(this.data?.initial?.dateOfBirth ?? '', {
       nonNullable: true,
       validators: Validators.required
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]
     })
   });
 
@@ -58,7 +63,11 @@ export class StudentFormDialogComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.form.getRawValue());
+    const raw = this.form.getRawValue();
+    const result: StudentFormDialogResult = this.isEditMode
+      ? { name: raw.name, email: raw.email, dateOfBirth: raw.dateOfBirth }
+      : { name: raw.name, email: raw.email, dateOfBirth: raw.dateOfBirth, password: raw.password };
+    this.dialogRef.close(result);
   }
 
   cancel(): void {

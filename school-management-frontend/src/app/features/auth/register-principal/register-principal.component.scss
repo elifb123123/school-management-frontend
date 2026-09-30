@@ -1,0 +1,67 @@
+.picker-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 15% 10%, var(--mat-sys-primary-container) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, var(--mat-sys-tertiary-container) 0%, transparent 45%),
+    var(--mat-sys-surface-container-low);
+}
+
+.picker-shell {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--app-radius-lg);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  margin-bottom: 16px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 28px;
+}
+
+.auth-card {
+  text-align: left;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-sm);
+
+  button {
+    margin-top: 8px;
+  }
+}
+
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}

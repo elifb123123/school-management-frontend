@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StudentService } from '../../../core/services/student.service';
+import { SchoolService } from '../../../core/services/school.service';
 import { StudentResponse } from '../../../core/models/student.model';
 import { extractErrorMessage } from '../../../core/utils/api-error';
 import {
@@ -40,9 +41,12 @@ import {
 })
 export class StudentListComponent implements OnInit, OnDestroy {
   private readonly studentService = inject(StudentService);
+  private readonly schoolService = inject(SchoolService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly destroyed$ = new Subject<void>();
+
+  private readonly schoolNames = signal<Map<number, string>>(new Map());
 
   protected readonly displayedColumns = [
     'id',
@@ -64,12 +68,20 @@ export class StudentListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadStudents();
 
+    this.schoolService.getSchools({ page: 0, size: 100 }).subscribe({
+      next: (page) => this.schoolNames.set(new Map(page.content.map((s) => [s.id, s.schoolName])))
+    });
+
     this.nameFilter.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroyed$))
       .subscribe(() => {
         this.pageIndex.set(0);
         this.loadStudents();
       });
+  }
+
+  protected schoolNameFor(schoolId: number): string {
+    return this.schoolNames().get(schoolId) ?? '';
   }
 
   ngOnDestroy(): void {
